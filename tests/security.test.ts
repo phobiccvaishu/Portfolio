@@ -98,6 +98,13 @@ describe('2. Public Endpoints Remain Accessible', () => {
     expect(res.headers.get('x-frame-options')).toBe('SAMEORIGIN');
     expect(res.headers.get('referrer-policy')).toBe('strict-origin-when-cross-origin');
   });
+
+  it('serves SPA index.html on direct navigation to /admin/login without 404', async () => {
+    const res = await fetch(`${baseUrl}/admin/login`);
+    expect(res.status).toBe(200);
+    const html = await res.text();
+    expect(html).toContain('id="root"');
+  });
 });
 
 describe('3. Administrator Authentication & Session Lifecycle', () => {

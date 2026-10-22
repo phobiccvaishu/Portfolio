@@ -19,7 +19,7 @@ const MainContent: React.FC = () => {
     const handleLocationChange = () => {
       const path = window.location.pathname.toLowerCase();
       const hash = window.location.hash.toLowerCase();
-      const isAdmin = path === '/admin' || path === '/admin/login' || hash === '#admin' || hash === '#/admin';
+      const isAdmin = path.startsWith('/admin') || hash.startsWith('#admin') || hash.startsWith('#/admin');
 
       if (isAdmin && activeView !== 'admin') {
         setActiveView('admin');

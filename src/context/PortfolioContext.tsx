@@ -52,7 +52,16 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeView, setActiveView] = useState<'portfolio' | 'admin'>('portfolio');
+  const [activeView, setActiveView] = useState<'portfolio' | 'admin'>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      if (path.startsWith('/admin') || hash.startsWith('#admin') || hash.startsWith('#/admin')) {
+        return 'admin';
+      }
+    }
+    return 'portfolio';
+  });
 
   // Sync with backend API on mount
   useEffect(() => {
