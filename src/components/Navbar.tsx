@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-canvas/95 border-b border-canvas-border transition-colors">
+    <header className="sticky top-0 z-40 bg-canvas border-b border-canvas-border transition-colors">
       <div className="max-w-editorial mx-auto px-5 sm:px-8 py-4">
         <div className="flex items-center justify-between">
           
