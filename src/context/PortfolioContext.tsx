@@ -88,6 +88,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       await fetch('/api/portfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(newData)
       });
     } catch (e) {
@@ -197,7 +198,10 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const syncGitHub = async () => {
     try {
-      const res = await fetch('/api/github/sync', { method: 'POST' });
+      const res = await fetch('/api/github/sync', {
+        method: 'POST',
+        credentials: 'include'
+      });
       const json = await res.json();
       if (json.success && json.report) {
         const report = json.report;
@@ -237,7 +241,10 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const syncLeetCode = async () => {
     try {
-      const res = await fetch('/api/leetcode/sync', { method: 'POST' });
+      const res = await fetch('/api/leetcode/sync', {
+        method: 'POST',
+        credentials: 'include'
+      });
       const json = await res.json();
       if (json.success && json.stats) {
         const stats = json.stats;

@@ -28,67 +28,57 @@
       "totalSubmissions": 42,
       "languages": [
         {
-          "name": "Java",
-          "solved": 3
-        },
-        {
           "name": "C",
           "solved": 28
+        },
+        {
+          "name": "Java",
+          "solved": 3
         }
       ],
       "recentSubmissions": [
         {
           "title": "Sqrt(x)",
-          "titleSlug": "sqrtx",
-          "timestamp": "1776262102"
+          "titleSlug": "sqrtx"
         },
         {
           "title": "Add Binary",
-          "titleSlug": "add-binary",
-          "timestamp": "1776262054"
+          "titleSlug": "add-binary"
         },
         {
           "title": "Plus One",
-          "titleSlug": "plus-one",
-          "timestamp": "1776261999"
+          "titleSlug": "plus-one"
         },
         {
           "title": "Unique Paths",
-          "titleSlug": "unique-paths",
-          "timestamp": "1776261821"
+          "titleSlug": "unique-paths"
         },
         {
           "title": "Rotate List",
-          "titleSlug": "rotate-list",
-          "timestamp": "1776261776"
+          "titleSlug": "rotate-list"
         },
         {
           "title": "Search Insert Position",
-          "titleSlug": "search-insert-position",
-          "timestamp": "1776261705"
+          "titleSlug": "search-insert-position"
         },
         {
           "title": "Divide Two Integers",
-          "titleSlug": "divide-two-integers",
-          "timestamp": "1776261658"
+          "titleSlug": "divide-two-integers"
         },
         {
           "title": "Find the Index of the First Occurrence in a String",
-          "titleSlug": "find-the-index-of-the-first-occurrence-in-a-string",
-          "timestamp": "1776261468"
+          "titleSlug": "find-the-index-of-the-first-occurrence-in-a-string"
         },
         {
           "title": "Remove Element",
-          "titleSlug": "remove-element",
-          "timestamp": "1776261428"
+          "titleSlug": "remove-element"
         },
         {
           "title": "Remove Duplicates from Sorted Array",
-          "titleSlug": "remove-duplicates-from-sorted-array",
-          "timestamp": "1776261366"
+          "titleSlug": "remove-duplicates-from-sorted-array"
         }
       ],
-      "lastSynced": "2026-10-22T20:17:11.622Z"
+      "lastSynced": "2026-10-22T22:25:56.803Z"
     },
     "cgpa": "8.60 / 10.00",
     "isOpenToOpportunities": true,
@@ -579,33 +569,33 @@
     {
       "source": "Verified e-Resume",
       "status": "Connected",
-      "lastSync": "2026-10-22T18:28:16.843Z",
+      "lastSync": "2026-10-22T22:25:56.803Z",
       "notes": "Directly synced with official resume: 8.60 CGPA, C-DAC MEPZ 400hr specialization, Unified Mentor internship, Reqruit IQ research paper."
     },
     {
       "source": "LeetCode API",
       "status": "Connected",
-      "lastSync": "2026-10-22T20:17:11.623Z",
-      "notes": "Profile @vaish_phob verified. 30 problems solved (20 Easy, 10 Medium)."
+      "lastSync": "2026-10-22T22:25:56.803Z",
+      "notes": "Profile @vaish_phob connected via GraphQL API. 30 problems solved (20 Easy, 10 Medium), C & Java languages verified."
     },
     {
       "source": "GitHub API",
       "status": "Connected",
-      "lastSync": "2026-10-22T18:28:16.843Z",
+      "lastSync": "2026-10-22T22:25:56.803Z",
       "notes": "Profile, 6 public repositories, and tech stack verified via GitHub REST API."
     },
     {
       "source": "LinkedIn Public Check",
       "status": "Authentication Required / Authwall",
-      "lastSync": "2026-10-22T18:28:16.843Z",
+      "lastSync": "2026-10-22T22:25:56.803Z",
       "notes": "LinkedIn requires authenticated session (HTTP 999 response). Import interface active for PDF/CSV upload."
     },
     {
       "source": "Manual Verified",
       "status": "Connected",
-      "lastSync": "2026-10-22T18:28:16.843Z",
+      "lastSync": "2026-10-22T22:25:56.803Z",
       "notes": "Profile details, phone, and coursework verified without fabrication."
     }
   ],
-  "lastUpdated": "2026-10-22T20:17:11.623Z"
+  "lastUpdated": "2026-10-22T22:25:56.803Z"
 }

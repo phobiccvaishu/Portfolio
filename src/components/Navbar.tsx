@@ -108,17 +108,18 @@ export const Navbar: React.FC = () => {
               </button>
             </div>
 
-            {/* Dashboard / Portfolio Toggle */}
-            <button
-              onClick={() => setActiveView(activeView === 'portfolio' ? 'admin' : 'portfolio')}
-              className={`px-3 py-1 text-[11px] uppercase tracking-wider transition-colors border ${
-                activeView === 'admin'
-                  ? 'bg-ink text-canvas border-ink font-medium'
-                  : 'text-ink-secondary hover:text-ink border-canvas-border hover:border-ink/40'
-              }`}
-            >
-              {activeView === 'admin' ? 'Exit View' : 'Manage Data'}
-            </button>
+            {/* Only display exit link when currently in administrative view */}
+            {activeView === 'admin' && (
+              <button
+                onClick={() => {
+                  window.history.pushState({}, '', '/');
+                  setActiveView('portfolio');
+                }}
+                className="px-3 py-1 text-[11px] uppercase tracking-wider transition-colors border border-canvas-border hover:border-ink text-ink-secondary hover:text-ink font-mono"
+              >
+                Exit Admin
+              </button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <button

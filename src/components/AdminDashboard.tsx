@@ -49,6 +49,20 @@ export const AdminDashboard: React.FC = () => {
     syncLeetCode
   } = usePortfolio();
 
+  // Administrator Authentication State
+  const [authStatus, setAuthStatus] = useState<'checking' | 'unauthenticated' | 'authenticated'>('checking');
+  const [adminUser, setAdminUser] = useState<string | null>(null);
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginSubmitting, setLoginSubmitting] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  // Reset Snapshot Modal
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetConfirmInput, setResetConfirmInput] = useState('');
+  const [resettingSnapshot, setResettingSnapshot] = useState(false);
+
   const [activeTab, setActiveTab] = useState<'sources' | 'linkedin' | 'credentials' | 'profile' | 'projects' | 'skills' | 'inquiries'>('inquiries');
 
   // Contact Inquiries State
@@ -61,11 +75,87 @@ export const AdminDashboard: React.FC = () => {
   const [leetcodeSyncReport, setLeetcodeSyncReport] = useState<any>(null);
   const [leetcodeSyncMsg, setLeetcodeSyncMsg] = useState('');
 
-  // Fetch inquiries from backend
+  // Check authentication status on mount
+  React.useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/admin/check', { credentials: 'include' });
+        if (res.ok) {
+          const json = await res.json();
+          if (json.authenticated) {
+            setAuthStatus('authenticated');
+            setAdminUser(json.user?.username || 'vaishnavi');
+            fetchInquiries();
+            return;
+          }
+        }
+        setAuthStatus('unauthenticated');
+      } catch (e) {
+        setAuthStatus('unauthenticated');
+      }
+    }
+    checkAuth();
+  }, []);
+
+  // Handle Admin Login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginSubmitting(true);
+    setLoginError('');
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          username: loginUsername,
+          password: loginPassword
+        })
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        setAuthStatus('authenticated');
+        setAdminUser(json.user?.username || loginUsername);
+        setLoginPassword('');
+        setLoginError('');
+        fetchInquiries();
+      } else {
+        setLoginError(json.error || 'Invalid administrator credentials.');
+      }
+    } catch (err: any) {
+      setLoginError('Network error connecting to authentication endpoint.');
+    } finally {
+      setLoginSubmitting(false);
+    }
+  };
+
+  // Handle Admin Logout
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (e) {}
+
+    setAuthStatus('unauthenticated');
+    setAdminUser(null);
+    setInquiries([]);
+    window.history.pushState({}, '', '/');
+    setActiveView('portfolio');
+  };
+
+  // Fetch inquiries from backend (authenticated only)
   const fetchInquiries = async () => {
     try {
       setLoadingInquiries(true);
-      const res = await fetch('/api/contact/messages');
+      const res = await fetch('/api/contact/messages', { credentials: 'include' });
+      if (res.status === 401) {
+        setAuthStatus('unauthenticated');
+        return;
+      }
       const json = await res.json();
       if (json.success && Array.isArray(json.messages)) {
         setInquiries(json.messages);
@@ -77,20 +167,56 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
-    fetchInquiries();
-  }, []);
-
   const handleDeleteInquiry = async (id: string) => {
     if (!confirm('Are you sure you want to remove this inquiry?')) return;
     try {
-      const res = await fetch(`/api/contact/messages/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/contact/messages/${id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+      if (res.status === 401) {
+        setAuthStatus('unauthenticated');
+        return;
+      }
       const json = await res.json();
       if (json.success) {
         setInquiries(prev => prev.filter(m => m.id !== id));
       }
     } catch (e) {
       alert('Failed to delete message');
+    }
+  };
+
+  // Handle Protected Reset Snapshot
+  const handleSecureResetSnapshot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (resetConfirmInput !== 'CONFIRM_RESET_SNAPSHOT') {
+      alert('Please type CONFIRM_RESET_SNAPSHOT exactly to confirm.');
+      return;
+    }
+
+    try {
+      setResettingSnapshot(true);
+      const res = await fetch('/api/admin/reset-snapshot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ confirmation: 'CONFIRM_RESET_SNAPSHOT' })
+      });
+
+      const json = await res.json();
+      if (res.ok && json.success) {
+        resetToVerifiedInitial();
+        setShowResetModal(false);
+        setResetConfirmInput('');
+        alert(json.message || 'Portfolio snapshot has been reset to verified baseline. Backup created on server.');
+      } else {
+        alert(json.error || 'Failed to reset snapshot.');
+      }
+    } catch (err: any) {
+      alert('Failed to communicate with snapshot reset endpoint.');
+    } finally {
+      setResettingSnapshot(false);
     }
   };
 
@@ -175,6 +301,7 @@ export const AdminDashboard: React.FC = () => {
 
       const res = await fetch('/api/linkedin/parse', {
         method: 'POST',
+        credentials: 'include',
         body: formData
       });
 
@@ -221,6 +348,7 @@ export const AdminDashboard: React.FC = () => {
         formData.append('certificate', certFile);
         const res = await fetch('/api/credentials/upload', {
           method: 'POST',
+          credentials: 'include',
           body: formData
         });
         const json = await res.json();
@@ -268,14 +396,115 @@ export const AdminDashboard: React.FC = () => {
     alert('Profile information updated successfully.');
   };
 
+  // 1. Loading Authentication Check View
+  if (authStatus === 'checking') {
+    return (
+      <div className="py-28 max-w-editorial mx-auto px-5 sm:px-8 text-center space-y-4">
+        <div className="w-5 h-5 border border-accent border-t-transparent animate-spin mx-auto" />
+        <div className="font-mono text-xs uppercase tracking-widest text-ink-secondary">
+          Verifying Administrator Session...
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Unauthenticated Login Gate
+  if (authStatus === 'unauthenticated') {
+    return (
+      <div className="py-20 sm:py-28 max-w-editorial mx-auto px-5 sm:px-8">
+        <div className="max-w-md mx-auto space-y-8">
+          <div className="space-y-2 text-left">
+            <span className="font-mono text-xs uppercase tracking-widest text-accent">00 / RESTRICTED</span>
+            <h1 className="font-display text-3xl sm:text-4xl text-ink font-normal tracking-tight">
+              Profile Administration
+            </h1>
+            <p className="text-sm text-ink-secondary font-sans leading-relaxed">
+              Authentication required. All administrative endpoints enforce server-side authorization and rate limiting.
+            </p>
+          </div>
+
+          {loginError && (
+            <div className="p-3 bg-accent/10 border border-accent text-xs font-mono text-ink text-left">
+              {loginError}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-5 text-left">
+            <div className="space-y-1">
+              <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+                Username
+              </label>
+              <input
+                type="text"
+                required
+                autoComplete="username"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                placeholder="vaishnavi"
+                className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2.5 outline-none font-mono"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex justify-between items-center">
+                <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="text-[10px] font-mono uppercase text-ink-secondary hover:text-ink"
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                autoComplete="current-password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2.5 outline-none font-mono"
+              />
+            </div>
+
+            <div className="pt-4 flex items-center justify-between">
+              <button
+                type="submit"
+                disabled={loginSubmitting}
+                className="px-6 py-2.5 bg-ink text-canvas hover:bg-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest disabled:opacity-50"
+              >
+                {loginSubmitting ? 'Authenticating...' : 'Authenticate →'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  window.history.pushState({}, '', '/');
+                  setActiveView('portfolio');
+                }}
+                className="editorial-link font-mono text-xs uppercase tracking-wider text-ink-secondary hover:text-ink"
+              >
+                ← Return to Site
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Authenticated Administrative Dashboard
   return (
     <div className="max-w-editorial mx-auto px-5 sm:px-8 py-14 sm:py-20 text-left space-y-10">
       
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between pb-6 border-b border-canvas-border gap-4">
         <div>
-          <div className="font-mono text-xs uppercase tracking-widest text-accent mb-1">
-            Data & Integration Pipeline
+          <div className="font-mono text-xs uppercase tracking-widest text-accent mb-1 flex items-center space-x-2">
+            <span>Data & Integration Pipeline</span>
+            <span className="text-canvas-border">/</span>
+            <span className="text-ink">User: {adminUser}</span>
           </div>
           <h1 className="font-display text-3xl sm:text-4xl font-normal text-ink">
             Profile Administration
@@ -285,26 +514,79 @@ export const AdminDashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-3 font-mono text-xs">
+        <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
           <button
-            onClick={() => {
-              if (confirm('Reset all portfolio content back to the verified snapshot?')) {
-                resetToVerifiedInitial();
-              }
-            }}
-            className="px-3 py-1.5 border border-canvas-border text-ink-secondary hover:text-ink uppercase tracking-wider transition-colors"
+            onClick={() => setShowResetModal(true)}
+            className="px-3 py-1.5 border border-canvas-border text-ink-secondary hover:text-accent hover:border-accent uppercase tracking-wider transition-colors"
           >
             Reset Snapshot
           </button>
 
           <button
-            onClick={() => setActiveView('portfolio')}
+            onClick={handleLogout}
+            className="px-3 py-1.5 border border-canvas-border hover:border-ink text-ink uppercase tracking-wider transition-colors"
+          >
+            Log Out
+          </button>
+
+          <button
+            onClick={() => {
+              window.history.pushState({}, '', '/');
+              setActiveView('portfolio');
+            }}
             className="px-3.5 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white uppercase tracking-wider transition-colors"
           >
             View Site &rarr;
           </button>
         </div>
       </div>
+
+      {/* Confirmation Modal for Reset Snapshot */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="max-w-md w-full bg-canvas border border-canvas-border p-6 space-y-5 text-left font-sans shadow-2xl">
+            <div className="space-y-1">
+              <div className="font-mono text-xs uppercase tracking-widest text-accent">Security Confirmation Required</div>
+              <h3 className="font-display text-2xl text-ink font-normal">Reset Portfolio Snapshot</h3>
+            </div>
+            <p className="text-xs text-ink-secondary font-mono leading-relaxed">
+              This action will restore all projects, skills, and certificates back to the verified baseline. An automatic server backup of current data will be created first.
+            </p>
+            <div className="space-y-2">
+              <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider block">
+                Type <span className="text-accent select-all">CONFIRM_RESET_SNAPSHOT</span> to confirm:
+              </label>
+              <input
+                type="text"
+                value={resetConfirmInput}
+                onChange={(e) => setResetConfirmInput(e.target.value)}
+                placeholder="CONFIRM_RESET_SNAPSHOT"
+                className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2 font-mono outline-none"
+              />
+            </div>
+            <div className="flex items-center justify-end space-x-3 pt-2 font-mono text-xs">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowResetModal(false);
+                  setResetConfirmInput('');
+                }}
+                className="px-3 py-1.5 border border-canvas-border text-ink-secondary hover:text-ink uppercase tracking-wider"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleSecureResetSnapshot}
+                disabled={resetConfirmInput !== 'CONFIRM_RESET_SNAPSHOT' || resettingSnapshot}
+                className="px-4 py-1.5 bg-accent text-white uppercase tracking-wider disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {resettingSnapshot ? 'Resetting...' : 'Confirm Reset'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex flex-wrap gap-2 border-b border-canvas-border pb-4 font-mono text-xs">

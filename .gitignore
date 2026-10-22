@@ -23,8 +23,14 @@ dist-ssr
 *.sln
 *.sw?
 
+# Environment files
+.env
+.env*.local
+.env.local
+
 # Uploaded files and local cache
 server/uploads/*
 !server/uploads/certificates/
 server/uploads/certificates/*
 !server/uploads/certificates/.gitkeep
+server/data/portfolio.backup-*.json
