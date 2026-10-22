@@ -75,6 +75,28 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             if (json.data.profile) {
               json.data.profile.email = 'vaishnavi1657@gmail.com';
             }
+
+            // Check if local storage holds newer administrator edits than server baseline
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+              try {
+                const localData = JSON.parse(saved);
+                const localTimestamp = localData.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
+                const serverTimestamp = json.data.lastUpdated ? new Date(json.data.lastUpdated).getTime() : 0;
+                if (localTimestamp > serverTimestamp) {
+                  // Local administrator modifications are newer; preserve and synchronize forward
+                  setData(localData);
+                  fetch('/api/portfolio', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(localData)
+                  }).catch(() => {});
+                  return;
+                }
+              } catch (e) {}
+            }
+
             setData(json.data);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(json.data));
           }
@@ -90,7 +112,10 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // Save changes locally and to server
   const persist = async (newData: PortfolioData) => {
-    setData(newData);
+    if (!newData.lastUpdated) {
+      newData.lastUpdated = new Date().toISOString();
+    }
+    setData({ ...newData });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
     try {
       setIsSaving(true);

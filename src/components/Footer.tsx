@@ -13,8 +13,8 @@ export const Footer: React.FC = () => {
       <div className="max-w-editorial mx-auto px-5 sm:px-8 space-y-6">
         <div className="flex flex-col sm:flex-row items-baseline justify-between gap-4 pb-6 border-b border-canvas-border">
           <div>
-            <span className="text-ink font-display text-lg font-normal">Vaishnavi Singh</span>
-            <span className="text-ink-secondary text-xs font-mono ml-2">/ SRMIST Computer Science</span>
+            <span className="text-ink font-display text-lg font-normal">{data.profile.name || 'Vaishnavi Singh'}</span>
+            <span className="text-ink-secondary text-xs font-mono ml-2">/ {data.profile.university || 'SRMIST Computer Science'}</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs uppercase tracking-wider">

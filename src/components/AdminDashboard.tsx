@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Credential, CredentialType } from '../types/portfolio';
+import { Credential, CredentialType, Project, ProjectCategory, Skill, SkillCategory } from '../types/portfolio';
 import {
   RefreshCw,
   Upload,
@@ -44,7 +44,10 @@ export const AdminDashboard: React.FC = () => {
     deleteCredential,
     updateCredential,
     deleteSkill,
+    addSkill,
     updateProject,
+    addProject,
+    deleteProject,
     resetToVerifiedInitial,
     syncLeetCode
   } = usePortfolio();
@@ -250,13 +253,48 @@ export const AdminDashboard: React.FC = () => {
 
   // Profile Form State
   const [profileForm, setProfileForm] = useState({
-    name: data.profile.name,
-    headline: data.profile.headline,
-    supportingStatement: data.profile.supportingStatement,
-    location: data.profile.location,
-    email: data.profile.email,
-    bio: data.profile.bio.join('\n\n')
+    name: data.profile.name || '',
+    headline: data.profile.headline || '',
+    supportingStatement: data.profile.supportingStatement || '',
+    location: data.profile.location || '',
+    university: data.profile.university || '',
+    cgpa: data.profile.cgpa || '',
+    email: data.profile.email || '',
+    isOpenToOpportunities: Boolean(data.profile.isOpenToOpportunities),
+    bio: Array.isArray(data.profile.bio) ? data.profile.bio.join('\n\n') : ''
   });
+
+  // Keep form in sync when data updates or loads from server/localStorage
+  React.useEffect(() => {
+    setProfileForm({
+      name: data.profile.name || '',
+      headline: data.profile.headline || '',
+      supportingStatement: data.profile.supportingStatement || '',
+      location: data.profile.location || '',
+      university: data.profile.university || '',
+      cgpa: data.profile.cgpa || '',
+      email: data.profile.email || '',
+      isOpenToOpportunities: Boolean(data.profile.isOpenToOpportunities),
+      bio: Array.isArray(data.profile.bio) ? data.profile.bio.join('\n\n') : ''
+    });
+  }, [data.profile]);
+
+  // Project Management State
+  const [showAddProject, setShowAddProject] = useState(false);
+  const [newProjectTitle, setNewProjectTitle] = useState('');
+  const [newProjectTagline, setNewProjectTagline] = useState('');
+  const [newProjectDesc, setNewProjectDesc] = useState('');
+  const [newProjectTech, setNewProjectTech] = useState('');
+  const [newProjectGithub, setNewProjectGithub] = useState('');
+  const [newProjectCategory, setNewProjectCategory] = useState<ProjectCategory>('AI & Intelligent Systems');
+  const [newProjectFeatured, setNewProjectFeatured] = useState(false);
+
+  // Skill Management State
+  const [showAddSkill, setShowAddSkill] = useState(false);
+  const [newSkillName, setNewSkillName] = useState('');
+  const [newSkillCategory, setNewSkillCategory] = useState<SkillCategory>('Languages');
+  const [newSkillProficiency, setNewSkillProficiency] = useState<'Foundational' | 'Intermediate' | 'Advanced'>('Intermediate');
+  const [newSkillEvidence, setNewSkillEvidence] = useState('');
 
   // Handle GitHub Sync
   const handleGithubSync = async () => {
@@ -397,6 +435,7 @@ export const AdminDashboard: React.FC = () => {
   };
 
   // Save Profile Form
+  const [profileSaveSuccess, setProfileSaveSuccess] = useState(false);
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     updateProfile({
@@ -404,10 +443,63 @@ export const AdminDashboard: React.FC = () => {
       headline: profileForm.headline,
       supportingStatement: profileForm.supportingStatement,
       location: profileForm.location,
+      university: profileForm.university,
+      cgpa: profileForm.cgpa,
       email: profileForm.email,
+      isOpenToOpportunities: profileForm.isOpenToOpportunities,
       bio: profileForm.bio.split('\n\n').filter(Boolean)
     });
-    alert('Profile information updated successfully.');
+    setProfileSaveSuccess(true);
+    setTimeout(() => setProfileSaveSuccess(false), 4000);
+  };
+
+  // Add Project
+  const handleAddProject = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProjectTitle.trim()) return;
+
+    const newProj: Project = {
+      id: 'proj-' + Date.now(),
+      title: newProjectTitle.trim(),
+      tagline: newProjectTagline.trim(),
+      description: newProjectDesc.trim() || newProjectTagline.trim(),
+      category: newProjectCategory,
+      technologies: newProjectTech.split(',').map(t => t.trim()).filter(Boolean),
+      keyFeatures: [],
+      githubUrl: newProjectGithub.trim() || `https://github.com/${data.profile.githubUsername}`,
+      verifiedFromGithub: false,
+      status: 'Active Development',
+      isFeatured: newProjectFeatured
+    };
+
+    addProject(newProj);
+    setNewProjectTitle('');
+    setNewProjectTagline('');
+    setNewProjectDesc('');
+    setNewProjectTech('');
+    setNewProjectGithub('');
+    setNewProjectFeatured(false);
+    setShowAddProject(false);
+  };
+
+  // Add Skill
+  const handleAddSkill = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSkillName.trim()) return;
+
+    const newSk: Skill = {
+      id: 'sk-' + Date.now(),
+      name: newSkillName.trim(),
+      category: newSkillCategory,
+      proficiency: newSkillProficiency,
+      source: 'user-confirmed',
+      evidenceRepo: newSkillEvidence.trim() || undefined
+    };
+
+    addSkill(newSk);
+    setNewSkillName('');
+    setNewSkillEvidence('');
+    setShowAddSkill(false);
   };
 
   // 1. Loading Authentication Check View
@@ -1030,6 +1122,51 @@ export const AdminDashboard: React.FC = () => {
               />
             </div>
 
+            <div className="space-y-1">
+              <label className="text-ink-secondary uppercase">Location</label>
+              <input
+                type="text"
+                value={profileForm.location}
+                onChange={(e) => setProfileForm({ ...profileForm, location: e.target.value })}
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                placeholder="Chennai, India"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-ink-secondary uppercase">University / Institution</label>
+              <input
+                type="text"
+                value={profileForm.university}
+                onChange={(e) => setProfileForm({ ...profileForm, university: e.target.value })}
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                placeholder="SRM Institute of Science and Technology, Chennai"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-ink-secondary uppercase">CGPA / Grade</label>
+              <input
+                type="text"
+                value={profileForm.cgpa}
+                onChange={(e) => setProfileForm({ ...profileForm, cgpa: e.target.value })}
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                placeholder="8.60 / 10.00"
+              />
+            </div>
+
+            <div className="space-y-1 flex items-center pt-5">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={profileForm.isOpenToOpportunities}
+                  onChange={(e) => setProfileForm({ ...profileForm, isOpenToOpportunities: e.target.checked })}
+                  className="rounded-none border-canvas-border text-accent focus:ring-0"
+                />
+                <span className="text-ink uppercase tracking-wider">Available for Opportunities / Internships</span>
+              </label>
+            </div>
+
             <div className="space-y-1 sm:col-span-2">
               <label className="text-ink-secondary uppercase">Headline</label>
               <input
@@ -1061,26 +1198,126 @@ export const AdminDashboard: React.FC = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider"
-          >
-            Save Updates
-          </button>
+          <div className="flex items-center space-x-4">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider transition-colors"
+            >
+              Save Updates &rarr;
+            </button>
+            {profileSaveSuccess && (
+              <span className="font-mono text-xs text-accent uppercase tracking-wider animate-pulse">
+                ✓ Saved to public portfolio!
+              </span>
+            )}
+          </div>
         </form>
       )}
 
       {/* TAB 5: Projects */}
       {activeTab === 'projects' && (
-        <div className="border border-canvas-border p-5 sm:p-7 space-y-4 bg-canvas-surface/20">
-          <h2 className="font-display text-2xl text-ink font-normal">
-            Projects List ({data.projects.length})
-          </h2>
+        <div className="border border-canvas-border p-5 sm:p-7 space-y-6 bg-canvas-surface/20">
+          <div className="flex items-center justify-between pb-2 border-b border-canvas-border">
+            <h2 className="font-display text-2xl text-ink font-normal">
+              Projects List ({data.projects.length})
+            </h2>
+            <button
+              onClick={() => setShowAddProject(!showAddProject)}
+              className="px-3 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider transition-colors"
+            >
+              {showAddProject ? 'Close Form [-]' : '+ Add Project'}
+            </button>
+          </div>
+
+          {showAddProject && (
+            <form onSubmit={handleAddProject} className="p-4 border border-canvas-border bg-canvas space-y-4 font-mono text-xs">
+              <div className="text-ink font-semibold uppercase tracking-wider">New Project Entry</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newProjectTitle}
+                    onChange={(e) => setNewProjectTitle(e.target.value)}
+                    placeholder="e.g. Distributed Task Queue"
+                    className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Tagline</label>
+                  <input
+                    type="text"
+                    value={newProjectTagline}
+                    onChange={(e) => setNewProjectTagline(e.target.value)}
+                    placeholder="Short one-line description"
+                    className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Technologies (comma separated)</label>
+                  <input
+                    type="text"
+                    value={newProjectTech}
+                    onChange={(e) => setNewProjectTech(e.target.value)}
+                    placeholder="FastAPI, Redis, Docker"
+                    className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">GitHub URL</label>
+                  <input
+                    type="url"
+                    value={newProjectGithub}
+                    onChange={(e) => setNewProjectGithub(e.target.value)}
+                    placeholder="https://github.com/..."
+                    className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Category</label>
+                  <select
+                    value={newProjectCategory}
+                    onChange={(e) => setNewProjectCategory(e.target.value as ProjectCategory)}
+                    className="w-full bg-canvas border border-canvas-border p-2 text-ink outline-none"
+                  >
+                    <option value="AI & Intelligent Systems">AI & Intelligent Systems</option>
+                    <option value="Full-Stack Platforms">Full-Stack Platforms</option>
+                    <option value="Algorithms & Systems">Algorithms & Systems</option>
+                    <option value="Tools & Utilities">Tools & Utilities</option>
+                  </select>
+                </div>
+                <div className="flex items-center pt-5">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={newProjectFeatured}
+                      onChange={(e) => setNewProjectFeatured(e.target.checked)}
+                      className="rounded-none border-canvas-border text-accent focus:ring-0"
+                    />
+                    <span className="text-ink uppercase tracking-wider">Highlight as Featured</span>
+                  </label>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white uppercase tracking-wider transition-colors"
+              >
+                Save Project &rarr;
+              </button>
+            </form>
+          )}
+
           <div className="divide-y divide-canvas-border font-mono text-xs">
             {data.projects.map((proj) => (
               <div key={proj.id} className="py-4 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
                 <div className="space-y-1">
-                  <div className="font-display text-lg text-ink font-normal">{proj.title}</div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-display text-lg text-ink font-normal">{proj.title}</span>
+                    {proj.isFeatured && (
+                      <span className="text-[10px] text-accent uppercase font-mono tracking-wider">[Featured]</span>
+                    )}
+                  </div>
                   <div className="text-xs text-ink-secondary font-sans">{proj.tagline}</div>
                   <div className="text-[11px] text-ink-secondary">{proj.technologies.join(', ')}</div>
                 </div>
@@ -1099,6 +1336,16 @@ export const AdminDashboard: React.FC = () => {
                   >
                     Repo &nearr;
                   </a>
+                  <button
+                    onClick={() => {
+                      if (confirm(`Remove project "${proj.title}"?`)) {
+                        deleteProject(proj.id);
+                      }
+                    }}
+                    className="text-accent hover:underline text-[11px] uppercase ml-2"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}
@@ -1108,20 +1355,93 @@ export const AdminDashboard: React.FC = () => {
 
       {/* TAB 6: Skills */}
       {activeTab === 'skills' && (
-        <div className="border border-canvas-border p-5 sm:p-7 space-y-4 bg-canvas-surface/20">
-          <h2 className="font-display text-2xl text-ink font-normal">
-            Skills Inventory ({data.skills.length})
-          </h2>
+        <div className="border border-canvas-border p-5 sm:p-7 space-y-6 bg-canvas-surface/20">
+          <div className="flex items-center justify-between pb-2 border-b border-canvas-border">
+            <h2 className="font-display text-2xl text-ink font-normal">
+              Skills Inventory ({data.skills.length})
+            </h2>
+            <button
+              onClick={() => setShowAddSkill(!showAddSkill)}
+              className="px-3 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider transition-colors"
+            >
+              {showAddSkill ? 'Close Form [-]' : '+ Add Skill'}
+            </button>
+          </div>
+
+          {showAddSkill && (
+            <form onSubmit={handleAddSkill} className="p-4 border border-canvas-border bg-canvas space-y-4 font-mono text-xs">
+              <div className="text-ink font-semibold uppercase tracking-wider">New Technical Competency</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Skill Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newSkillName}
+                    onChange={(e) => setNewSkillName(e.target.value)}
+                    placeholder="e.g. PyTorch"
+                    className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Category</label>
+                  <select
+                    value={newSkillCategory}
+                    onChange={(e) => setNewSkillCategory(e.target.value as SkillCategory)}
+                    className="w-full bg-canvas border border-canvas-border p-2 text-ink outline-none"
+                  >
+                    <option value="Languages">Languages</option>
+                    <option value="AI / Machine Learning">AI / Machine Learning</option>
+                    <option value="Backend & Systems">Backend & Systems</option>
+                    <option value="Databases & Cache">Databases & Cache</option>
+                    <option value="Frontend & Web">Frontend & Web</option>
+                    <option value="Tools & DevOps">Tools & DevOps</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Proficiency</label>
+                  <select
+                    value={newSkillProficiency}
+                    onChange={(e) => setNewSkillProficiency(e.target.value as any)}
+                    className="w-full bg-canvas border border-canvas-border p-2 text-ink outline-none"
+                  >
+                    <option value="Foundational">Foundational</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-ink-secondary uppercase block mb-1">Evidence / Usage</label>
+                  <input
+                    type="text"
+                    value={newSkillEvidence}
+                    onChange={(e) => setNewSkillEvidence(e.target.value)}
+                    placeholder="e.g. Adaptive Study Twin"
+                    className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white uppercase tracking-wider transition-colors"
+              >
+                Save Skill &rarr;
+              </button>
+            </form>
+          )}
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 font-mono text-xs">
             {data.skills.map((skill) => (
               <div key={skill.id} className="p-3 border border-canvas-border flex items-center justify-between">
                 <div>
                   <div className="text-ink font-medium">{skill.name}</div>
-                  <div className="text-[10px] text-ink-secondary uppercase">{skill.category}</div>
+                  <div className="text-[10px] text-ink-secondary uppercase">
+                    {skill.category} &bull; {skill.evidenceRepo || skill.proficiency || 'Verified'}
+                  </div>
                 </div>
                 <button
                   onClick={() => deleteSkill(skill.id)}
-                  className="text-accent hover:underline text-[10px] uppercase"
+                  className="text-accent hover:underline text-[10px] uppercase ml-2"
                 >
                   Delete
                 </button>

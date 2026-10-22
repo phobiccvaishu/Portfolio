@@ -35,7 +35,7 @@ export const About: React.FC = () => {
             <div className="pt-4 border-t border-canvas-border font-mono text-xs text-ink-secondary space-y-2">
               <div className="flex flex-wrap items-baseline gap-2">
                 <span className="text-ink uppercase tracking-wider">Institution:</span>
-                <span>SRM Institute of Science and Technology, Chennai</span>
+                <span>{data.profile.university || 'SRM Institute of Science and Technology, Chennai'}</span>
               </div>
               <div className="flex flex-wrap items-baseline gap-2">
                 <span className="text-ink uppercase tracking-wider">Academic Standing:</span>
@@ -43,7 +43,7 @@ export const About: React.FC = () => {
               </div>
               <div className="flex flex-wrap items-baseline gap-2">
                 <span className="text-ink uppercase tracking-wider">Spoken Languages:</span>
-                <span>English (Professional), Hindi (Native)</span>
+                <span>{data.profile.spokenLanguages?.join(', ') || 'English (Professional), Hindi (Native)'}</span>
               </div>
             </div>
           </div>

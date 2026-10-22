@@ -65,6 +65,11 @@ export const Projects: React.FC = () => {
                       <h3 className="font-display text-xl sm:text-2xl text-ink group-hover:text-accent transition-colors font-normal">
                         {project.title}
                       </h3>
+                      {project.isFeatured && (
+                        <span className="font-mono text-[10px] text-accent uppercase tracking-wider">
+                          [Featured]
+                        </span>
+                      )}
                       {project.researchPaper && (
                         <span className="font-mono text-[10px] text-accent uppercase tracking-wider">
                           [Paper]

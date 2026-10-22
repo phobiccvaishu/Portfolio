@@ -21,15 +21,17 @@ export const Hero: React.FC = () => {
         >
           <div className="flex items-center space-x-2">
             <span className="w-1.5 h-1.5 bg-accent inline-block" />
-            <span>Chennai, India</span>
+            <span>{data.profile.location || 'Chennai, India'}</span>
             <span className="text-canvas-border">/</span>
-            <span>SRMIST CSE '28</span>
+            <span>{data.profile.university ? `${data.profile.university} '28` : "SRMIST CSE '28"}</span>
           </div>
 
           <div className="flex items-center space-x-3 text-[11px]">
             <span>CGPA {data.profile.cgpa || '8.60 / 10.00'}</span>
             <span className="text-canvas-border">/</span>
-            <span className="text-accent">Available for Internships</span>
+            <span className={data.profile.isOpenToOpportunities ? "text-accent" : "text-ink-secondary"}>
+              {data.profile.isOpenToOpportunities ? 'Available for Internships' : 'Unavailable'}
+            </span>
           </div>
         </motion.div>
 
@@ -41,24 +43,24 @@ export const Hero: React.FC = () => {
           className="space-y-6 sm:space-y-8 text-left"
         >
           <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-normal tracking-tight text-ink leading-[0.95]">
-            Vaishnavi Singh
+            {data.profile.name || 'Vaishnavi Singh'}
           </h1>
 
           {/* Editorial one-liner */}
           <p className="text-lg sm:text-xl lg:text-2xl text-ink-secondary max-w-3xl font-normal leading-relaxed">
-            Computer Science Engineering student at SRM Institute of Science and Technology. Developing artificial intelligence pipelines, computer vision proctoring systems, and high-concurrency backend applications.
+            {data.profile.headline || 'Computer Science Engineering student at SRM Institute of Science and Technology. Developing artificial intelligence pipelines, computer vision proctoring systems, and high-concurrency backend applications.'}
           </p>
 
           {/* Quick metadata line */}
           <div className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono text-ink-secondary uppercase tracking-wider">
             <div>
               <span className="text-ink">Current: </span>
-              <span>C-DAC AI/ML Trainee &bull; Unified Mentor Intern</span>
+              <span>{data.experience[0] ? `${data.experience[0].organization} ${data.experience[0].role}` : 'C-DAC AI/ML Trainee • Unified Mentor Intern'}</span>
             </div>
             <span className="text-canvas-border hidden sm:inline">|</span>
             <div>
-              <span className="text-ink">Research: </span>
-              <span className="text-accent">Reqruit IQ Paper (Ongoing)</span>
+              <span className="text-ink">Focus: </span>
+              <span className="text-accent">{data.profile.supportingStatement || 'Reqruit IQ Paper (Ongoing)'}</span>
             </div>
           </div>
 

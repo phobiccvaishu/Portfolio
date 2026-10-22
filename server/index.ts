@@ -38,6 +38,12 @@ const certificatesDir = path.join(uploadsDir, 'certificates');
 
 const portfolioFile = path.join(dataDir, 'portfolio.json');
 const messagesFile = path.join(dataDir, 'messages.json');
+const tempPortfolioFile = path.join(os.tmpdir(), 'portfolio.json');
+const tempMessagesFile = path.join(os.tmpdir(), 'messages.json');
+
+// In-memory cache for fast access & serverless container persistence
+let cachedPortfolio: any = null;
+let cachedMessages: any[] | null = null;
 
 // --- SECURITY HEADERS ---
 app.use((_req: Request, res: Response, next: NextFunction) => {
@@ -264,10 +270,25 @@ const uploadMemory = multer({
 
 // Helper: load portfolio data
 function loadPortfolio() {
+  if (cachedPortfolio) {
+    return cachedPortfolio;
+  }
+  // Try serverless temp file first if present
+  if (isServerless && fs.existsSync(tempPortfolioFile)) {
+    try {
+      const raw = fs.readFileSync(tempPortfolioFile, 'utf-8');
+      cachedPortfolio = JSON.parse(raw);
+      return cachedPortfolio;
+    } catch (err) {
+      console.warn('Could not read temp portfolio file:', err);
+    }
+  }
+  // Fall back to packaged portfolio.json
   if (fs.existsSync(portfolioFile)) {
     try {
       const raw = fs.readFileSync(portfolioFile, 'utf-8');
-      return JSON.parse(raw);
+      cachedPortfolio = JSON.parse(raw);
+      return cachedPortfolio;
     } catch (err) {
       console.error('Error reading portfolio.json:', err);
     }
@@ -277,11 +298,54 @@ function loadPortfolio() {
 
 // Helper: save portfolio data
 function savePortfolio(data: any) {
+  cachedPortfolio = data;
+  if (isServerless) {
+    try {
+      fs.writeFileSync(tempPortfolioFile, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (err: any) {
+      console.warn('[STORAGE] Temp file write error:', err.message);
+    }
+  }
   try {
     fs.writeFileSync(portfolioFile, JSON.stringify(data, null, 2), 'utf-8');
   } catch (err: any) {
     console.warn('[STORAGE] Filesystem write warning (e.g. serverless read-only container):', err.message);
   }
+}
+
+// Helper: load messages
+function loadMessages(): any[] {
+  if (cachedMessages) {
+    return cachedMessages;
+  }
+  if (isServerless && fs.existsSync(tempMessagesFile)) {
+    try {
+      const raw = fs.readFileSync(tempMessagesFile, 'utf-8');
+      cachedMessages = JSON.parse(raw);
+      return cachedMessages || [];
+    } catch (err) {}
+  }
+  if (fs.existsSync(messagesFile)) {
+    try {
+      const raw = fs.readFileSync(messagesFile, 'utf-8');
+      cachedMessages = JSON.parse(raw);
+      return cachedMessages || [];
+    } catch (err) {}
+  }
+  return [];
+}
+
+// Helper: save messages
+function saveMessages(messages: any[]) {
+  cachedMessages = messages;
+  if (isServerless) {
+    try {
+      fs.writeFileSync(tempMessagesFile, JSON.stringify(messages, null, 2), 'utf-8');
+    } catch (err: any) {}
+  }
+  try {
+    fs.writeFileSync(messagesFile, JSON.stringify(messages, null, 2), 'utf-8');
+  } catch (err: any) {}
 }
 
 // ==========================================
@@ -318,14 +382,7 @@ app.post('/api/contact', (req: Request, res: Response) => {
   }
 
   try {
-    let existingMessages: any[] = [];
-    if (fs.existsSync(messagesFile)) {
-      try {
-        existingMessages = JSON.parse(fs.readFileSync(messagesFile, 'utf-8'));
-      } catch (e) {
-        existingMessages = [];
-      }
-    }
+    const existingMessages = loadMessages();
 
     const newMessage = {
       id: 'msg-' + Date.now(),
@@ -335,7 +392,7 @@ app.post('/api/contact', (req: Request, res: Response) => {
     };
 
     existingMessages.unshift(newMessage);
-    fs.writeFileSync(messagesFile, JSON.stringify(existingMessages, null, 2), 'utf-8');
+    saveMessages(existingMessages);
 
     return res.json({
       success: true,
@@ -486,11 +543,8 @@ app.post('/api/portfolio', requireAdmin, (req: Request, res: Response) => {
 // GET /api/contact/messages (Protected Inquiries Inbox)
 app.get('/api/contact/messages', requireAdmin, (_req: Request, res: Response) => {
   try {
-    if (fs.existsSync(messagesFile)) {
-      const messages = JSON.parse(fs.readFileSync(messagesFile, 'utf-8'));
-      return res.json({ success: true, messages });
-    }
-    return res.json({ success: true, messages: [] });
+    const messages = loadMessages();
+    return res.json({ success: true, messages });
   } catch (err: any) {
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -500,13 +554,14 @@ app.get('/api/contact/messages', requireAdmin, (_req: Request, res: Response) =>
 app.delete('/api/contact/messages/:id', requireAdmin, (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    if (fs.existsSync(messagesFile)) {
-      let messages = JSON.parse(fs.readFileSync(messagesFile, 'utf-8'));
-      messages = messages.filter((m: any) => m.id !== id);
-      fs.writeFileSync(messagesFile, JSON.stringify(messages, null, 2), 'utf-8');
-      return res.json({ success: true, message: 'Message removed successfully' });
+    let messages = loadMessages();
+    const prevCount = messages.length;
+    messages = messages.filter((m: any) => m.id !== id);
+    if (messages.length === prevCount) {
+      return res.status(404).json({ success: false, error: 'Message not found' });
     }
-    return res.status(404).json({ success: false, error: 'Messages store not found' });
+    saveMessages(messages);
+    return res.json({ success: true, message: 'Message removed successfully' });
   } catch (err: any) {
     return res.status(500).json({ success: false, error: err.message });
   }

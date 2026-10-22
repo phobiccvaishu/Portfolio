@@ -126,6 +126,8 @@ export interface PersonalProfile {
   supportingStatement: string;
   bio: string[];
   location: string;
+  university?: string;
+  title?: string;
   email: string;
   phone?: string;
   avatarUrl: string;

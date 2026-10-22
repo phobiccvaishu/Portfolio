@@ -49,7 +49,7 @@ export const Navbar: React.FC = () => {
             className="group flex items-baseline space-x-2 text-ink hover:text-accent transition-colors"
           >
             <span className="font-display text-2xl tracking-tight font-normal">
-              Vaishnavi Singh
+              {data.profile.name || 'Vaishnavi Singh'}
             </span>
             <span className="hidden sm:inline font-mono text-[11px] text-ink-secondary uppercase tracking-widest">
               / CSE & AI

@@ -12,6 +12,8 @@ export const initialPortfolioData: PortfolioData = {
       "Currently undergoing an intensive 400-hour C-DAC AI/ML specialization, researching automated talent intelligence algorithms for the Reqruit IQ research paper, and interning at Unified Mentor."
     ],
     location: "Chennai, TN, India",
+    university: "SRM Institute of Science and Technology, Chennai",
+    title: "CSE & AI",
     email: "vaishnavi1657@gmail.com",
     phone: "+91-7209905770",
     avatarUrl: "https://avatars.githubusercontent.com/u/165480899?v=4",
