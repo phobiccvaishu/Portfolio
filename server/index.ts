@@ -405,15 +405,18 @@ const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   subject: z.string().min(3, 'Subject must be at least 3 characters'),
-  message: z.string().min(10, 'Message must be at least 10 characters')
+  message: z.string().min(3, 'Message must be at least 3 characters')
 });
 
 app.post('/api/contact', (req: Request, res: Response) => {
   const result = contactSchema.safeParse(req.body);
   if (!result.success) {
+    const fieldErrors = result.error.flatten().fieldErrors;
+    const firstErrorMessage = Object.values(fieldErrors).flat()[0] || 'Please check your inputs and try again.';
     return res.status(400).json({
       success: false,
-      errors: result.error.flatten().fieldErrors
+      error: firstErrorMessage,
+      errors: fieldErrors
     });
   }
 

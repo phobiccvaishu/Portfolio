@@ -39,7 +39,9 @@ export const Contact: React.FC = () => {
         setForm({ name: '', email: '', subject: '', message: '' });
       } else {
         setStatus('error');
-        setErrorMessage(json.error || 'Failed to submit message. Please email directly.');
+        const errDetail = json.error || 
+          (json.errors ? Object.values(json.errors).flat().join('. ') : 'Failed to submit message. Please try again or email directly.');
+        setErrorMessage(errDetail);
       }
     } catch (err: any) {
       setStatus('error');
