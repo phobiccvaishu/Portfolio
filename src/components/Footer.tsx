@@ -1,6 +1,5 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const { data } = usePortfolio();
@@ -10,64 +9,51 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="border-t border-canvas-border bg-canvas-subtle py-12 text-ink-secondary text-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          
-          <div className="text-left space-y-1">
-            <div className="flex items-center space-x-2">
-              <span className="font-display font-bold text-ink text-sm">
-                {data.profile.name}
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-              <span className="font-mono text-ink-muted text-[11px]">SRMIST Computer Science</span>
-            </div>
-            <p className="text-ink-muted">
-              Designed with refined editorial minimalism. Grounded strictly in authentic engineering data.
-            </p>
+    <footer className="py-12 bg-canvas text-ink-secondary text-xs font-mono text-left">
+      <div className="max-w-editorial mx-auto px-5 sm:px-8 space-y-6">
+        <div className="flex flex-col sm:flex-row items-baseline justify-between gap-4 pb-6 border-b border-canvas-border">
+          <div>
+            <span className="text-ink font-display text-lg font-normal">Vaishnavi Singh</span>
+            <span className="text-ink-secondary text-xs font-mono ml-2">/ SRMIST Computer Science</span>
           </div>
 
-          <div className="flex items-center space-x-6 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs uppercase tracking-wider">
             <a
               href={`https://github.com/${data.profile.githubUsername}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="editorial-link hover:text-ink"
             >
-              GitHub
+              GitHub &nearr;
             </a>
             <a
               href={`https://www.linkedin.com/in/${data.profile.linkedinSlug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="editorial-link hover:text-ink"
             >
-              LinkedIn
+              LinkedIn &nearr;
             </a>
             <a
-              href={`mailto:${data.profile.email}`}
-              className="hover:text-accent transition-colors"
+              href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="editorial-link hover:text-ink"
             >
-              Email
+              LeetCode &nearr;
             </a>
             <button
               onClick={scrollToTop}
-              aria-label="Scroll to top"
-              className="p-2 rounded-lg bg-canvas-muted border border-canvas-border hover:border-canvas-borderStrong text-ink transition-colors"
+              className="editorial-link text-ink hover:text-accent"
             >
-              <ArrowUp className="w-3.5 h-3.5" />
+              Top &uarr;
             </button>
           </div>
-
         </div>
 
-        <div className="mt-8 pt-6 border-t border-canvas-border/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-mono text-ink-muted">
-          <div>
-            Data Last Synced: {new Date(data.lastUpdated).toLocaleDateString()} at {new Date(data.lastUpdated).toLocaleTimeString()}
-          </div>
-          <div>
-            Built with React, TypeScript, Tailwind CSS & Vite
-          </div>
+        <div className="flex flex-col sm:flex-row items-baseline justify-between gap-2 text-[11px] text-ink-secondary">
+          <span>Editorial developer portfolio &bull; Clean data pipeline</span>
+          <span>Last synchronized: {new Date(data.lastUpdated).toLocaleDateString()}</span>
         </div>
       </div>
     </footer>

@@ -4,40 +4,86 @@
 
 @layer base {
   :root {
+    color-scheme: light;
+    --color-canvas: #EFECE5;
+    --color-surface: #E7E3DA;
+    --color-surface-hover: #DFDAD0;
+    --color-ink: #161513;
+    --color-ink-secondary: #5E5A52;
+    --color-border: rgba(22, 21, 19, 0.14);
+    --color-accent: #D94A22;
+    --color-accent-subtle: rgba(217, 74, 34, 0.08);
+  }
+
+  .dark {
     color-scheme: dark;
+    --color-canvas: #141311;
+    --color-surface: #1D1C18;
+    --color-surface-hover: #262420;
+    --color-ink: #ECE8DF;
+    --color-ink-secondary: #9E9A90;
+    --color-border: rgba(236, 232, 223, 0.12);
+    --color-accent: #E05A34;
+    --color-accent-subtle: rgba(224, 90, 52, 0.12);
   }
 
   body {
-    background-color: #090A0C;
-    color: #F5F6F8;
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
     overflow-x: hidden;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Focus visible accessibility */
+  /* Accessible visible focus indicator */
   *:focus-visible {
-    outline: 2px solid #D4FF00;
+    outline: 1.5px solid var(--color-accent);
     outline-offset: 2px;
   }
 
-  /* Custom scrollbar */
+  /* Minimal custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #090A0C;
+    background: var(--color-canvas);
   }
   ::-webkit-scrollbar-thumb {
-    background: #22252D;
-    border-radius: 3px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #343844;
+    background: var(--color-surface-hover);
+    border-radius: 0px;
   }
 }
 
-/* Reduced motion preference respect */
+/* Editorial underline link hover helper */
+.editorial-link {
+  position: relative;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.editorial-link::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: -1px;
+  left: 0;
+  background-color: currentColor;
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.editorial-link:hover::after {
+  opacity: 1;
+}
+
+/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -47,17 +93,4 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Subtle grid line utility */
-.bg-grid-pattern {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-}
-
-.noise-subtle {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
-  background-size: 24px 24px;
 }

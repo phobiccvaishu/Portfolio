@@ -9,38 +9,41 @@ export default {
     extend: {
       colors: {
         canvas: {
-          DEFAULT: '#090A0C',
-          subtle: '#101216',
-          muted: '#16181F',
-          surface: '#1D2029',
-          border: 'rgba(255, 255, 255, 0.08)',
-          borderSubtle: 'rgba(255, 255, 255, 0.04)',
-          borderStrong: 'rgba(255, 255, 255, 0.16)'
+          DEFAULT: 'var(--color-canvas)',
+          surface: 'var(--color-surface)',
+          hover: 'var(--color-surface-hover)',
+          border: 'var(--color-border)',
         },
         ink: {
-          DEFAULT: '#F5F6F8',
-          secondary: '#B1B5C0',
-          muted: '#717684',
-          faint: '#434752'
+          DEFAULT: 'var(--color-ink)',
+          secondary: 'var(--color-ink-secondary)',
         },
         accent: {
-          DEFAULT: '#D4FF00', // Electric lime
-          hover: '#C2EB00',
-          muted: 'rgba(212, 255, 0, 0.12)',
-          border: 'rgba(212, 255, 0, 0.28)'
+          DEFAULT: 'var(--color-accent)',
+          subtle: 'var(--color-accent-subtle)',
         }
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'Fira Code', 'monospace'],
-        display: ['"Space Grotesk"', '"Plus Jakarta Sans"', 'sans-serif']
+        sans: ['"Geist"', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+        display: ['"Instrument Serif"', 'Georgia', 'serif']
+      },
+      borderRadius: {
+        none: '0',
+        sm: '2px',
+        DEFAULT: '4px',
+        md: '6px',
       },
       letterSpacing: {
-        tightest: '-0.035em',
+        tightest: '-0.04em',
         tighter: '-0.02em',
         tight: '-0.01em',
-        wide: '0.04em',
-        widest: '0.08em'
+        normal: '0',
+        wide: '0.05em',
+        widest: '0.12em',
+      },
+      maxWidth: {
+        editorial: '1160px',
       }
     },
   },

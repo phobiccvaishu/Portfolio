@@ -1,96 +1,69 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { GraduationCap, Briefcase, Calendar, MapPin, CheckCircle2, ShieldCheck, Clock, Award } from 'lucide-react';
 
 export const ExperienceEducation: React.FC = () => {
   const { data } = usePortfolio();
 
   return (
-    <section id="experience" className="py-20 md:py-28 border-t border-canvas-border relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="experience" className="py-20 sm:py-28 border-b border-canvas-border text-left">
+      <div className="max-w-editorial mx-auto px-5 sm:px-8">
         
         {/* Section Header */}
-        <div className="text-left space-y-3 mb-14">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-accent uppercase tracking-widest">
-            <span>04 // Trajectory</span>
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-12 sm:mb-16 pb-4 border-b border-canvas-border gap-4">
+          <div className="flex items-baseline space-x-3">
+            <span className="font-mono text-xs uppercase tracking-widest text-accent">04 /</span>
+            <h2 className="font-display text-3xl sm:text-4xl text-ink font-normal tracking-tight">
+              Experience & Academic Track
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-ink tracking-tight">
-            Academic Track & Industry Experience
-          </h2>
-          <p className="text-base text-ink-secondary max-w-xl">
-            Verified academic performance at SRMIST (CGPA 8.60/10.00), C-DAC AI/ML specialization, and ongoing software engineering internship.
-          </p>
+          <span className="font-mono text-xs text-ink-secondary uppercase tracking-widest">
+            Trajectory & Education
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        {/* 12-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           
-          {/* Experience Column */}
-          <div className="space-y-6 text-left">
-            <div className="flex items-center space-x-3 pb-3 border-b border-canvas-border">
-              <div className="p-2 rounded-lg bg-canvas-muted border border-canvas-border text-accent">
-                <Briefcase className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-display font-bold text-xl text-ink">Industry & Leadership Experience</h3>
-                <span className="text-xs font-mono text-ink-muted">Internships & Professional Specializations</span>
-              </div>
-            </div>
+          {/* Left Column: Experience (7 cols) */}
+          <div className="lg:col-span-7 space-y-10">
+            <h3 className="font-mono text-xs text-ink uppercase tracking-widest pb-2 border-b border-canvas-border">
+              Industry Experience & Internships
+            </h3>
 
-            <div className="space-y-6">
+            <div className="space-y-10">
               {data.experience.map((exp) => (
-                <div
-                  key={exp.id}
-                  className="p-6 rounded-2xl bg-canvas-subtle border border-canvas-border hover:border-canvas-borderStrong transition-all space-y-4"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-canvas-muted text-ink-secondary border border-canvas-border">
-                        {exp.type.toUpperCase()}
-                      </span>
-                      {exp.badge && (
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-semibold flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{exp.badge}</span>
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-1.5 text-xs font-mono text-ink-muted">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{exp.startDate} – {exp.endDate}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-lg font-display font-bold text-ink">
-                      {exp.role}
-                    </h4>
-                    <div className="text-sm text-accent font-medium mt-0.5">
+                <div key={exp.id} className="space-y-3 pb-8 border-b border-canvas-border last:border-b-0 last:pb-0">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 font-mono text-xs">
+                    <span className="text-accent uppercase tracking-wider font-medium">
                       {exp.organization}
-                    </div>
+                    </span>
+                    <span className="text-ink-secondary">
+                      {exp.startDate} &mdash; {exp.endDate}
+                    </span>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed">
+                  <div className="font-display text-xl sm:text-2xl text-ink font-normal">
+                    {exp.role}
+                  </div>
+
+                  <p className="text-sm sm:text-[15px] text-ink-secondary leading-relaxed">
                     {exp.description}
                   </p>
 
-                  <div className="space-y-2 pt-2 border-t border-canvas-border">
-                    <div className="text-xs font-mono text-ink-muted uppercase">Verified Responsibilities:</div>
-                    <ul className="space-y-1.5 text-xs text-ink-secondary">
+                  {exp.responsibilities && (
+                    <ul className="space-y-1.5 text-xs sm:text-sm text-ink-secondary pt-1 font-sans">
                       {exp.responsibilities.map((r, i) => (
                         <li key={i} className="flex items-start space-x-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-accent mt-0.5 flex-shrink-0" />
+                          <span className="text-accent font-mono">&mdash;</span>
                           <span>{r}</span>
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  )}
 
-                  <div className="flex flex-wrap gap-1.5 pt-2">
+                  <div className="pt-2 flex flex-wrap gap-x-2 font-mono text-[11px] text-ink-secondary">
                     {exp.technologies.map((t) => (
-                      <span
-                        key={t}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded bg-canvas-muted text-ink-muted border border-canvas-border"
-                      >
+                      <span key={t} className="after:content-['/'] last:after:content-[''] pr-1.5">
                         {t}
                       </span>
                     ))}
@@ -100,133 +73,93 @@ export const ExperienceEducation: React.FC = () => {
             </div>
           </div>
 
-          {/* Education Column */}
-          <div id="education" className="space-y-6 text-left">
-            <div className="flex items-center space-x-3 pb-3 border-b border-canvas-border">
-              <div className="p-2 rounded-lg bg-canvas-muted border border-canvas-border text-accent">
-                <GraduationCap className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-display font-bold text-xl text-ink">Education & Academics</h3>
-                <span className="text-xs font-mono text-ink-muted">Official Degree Program</span>
-              </div>
-            </div>
-
+          {/* Right Column: Education & LeetCode Problem Solving (5 cols) */}
+          <div className="lg:col-span-5 space-y-10">
+            
+            {/* Education */}
             <div className="space-y-6">
+              <h3 className="font-mono text-xs text-ink uppercase tracking-widest pb-2 border-b border-canvas-border">
+                Formal Education
+              </h3>
+
               {data.education.map((edu) => (
-                <div
-                  key={edu.id}
-                  className="p-6 rounded-2xl bg-canvas-subtle border border-canvas-border hover:border-canvas-borderStrong transition-all space-y-4"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <span className="text-xs font-mono px-2.5 py-1 rounded bg-accent-muted text-accent border border-accent-border self-start font-semibold">
-                      {edu.degree}
-                    </span>
-                    <div className="flex items-center space-x-1.5 text-xs font-mono text-ink-muted">
-                      <Calendar className="w-3.5 h-3.5" />
-                      <span>{edu.startYear} – {edu.endYear}</span>
-                    </div>
+                <div key={edu.id} className="space-y-2">
+                  <div className="flex items-baseline justify-between font-mono text-xs text-ink-secondary">
+                    <span className="text-accent uppercase tracking-wider">{edu.location}</span>
+                    <span>{edu.startYear} &mdash; {edu.endYear}</span>
                   </div>
 
-                  <div>
-                    <h4 className="text-lg font-display font-bold text-ink">
-                      {edu.institution}
-                    </h4>
-                    <div className="text-sm text-ink-secondary mt-0.5">
-                      {edu.fieldOfStudy}
-                    </div>
+                  <div className="font-display text-xl sm:text-2xl text-ink font-normal">
+                    {edu.institution}
                   </div>
 
-                  <div className="flex items-center space-x-1.5 text-xs text-ink-muted font-mono">
-                    <MapPin className="w-3.5 h-3.5 text-accent" />
-                    <span>{edu.location}</span>
+                  <div className="text-sm text-ink font-medium">
+                    {edu.degree} &bull; {edu.fieldOfStudy}
                   </div>
 
-                  <div className="text-sm font-mono text-ink bg-canvas-muted p-3 rounded-xl border border-canvas-border flex items-center justify-between">
-                    <span className="text-ink-muted">Academic Standing:</span>
-                    <span className="text-accent font-bold text-base">{edu.cgpa || edu.grade}</span>
+                  <div className="font-mono text-xs text-ink pt-1">
+                    Standing: <span className="text-accent font-bold">{edu.cgpa || edu.grade}</span>
                   </div>
 
                   {edu.highlights && (
-                    <div className="space-y-2 pt-2 border-t border-canvas-border">
-                      <div className="text-xs font-mono text-ink-muted uppercase">Coursework & Problem Solving:</div>
-                      <ul className="space-y-1.5 text-xs text-ink-secondary">
-                        {edu.highlights.map((h, i) => (
-                          <li key={i} className="flex items-start space-x-2">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-accent mt-0.5 flex-shrink-0" />
-                            <span>{h}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="text-xs text-ink-secondary leading-relaxed pt-2 space-y-1 font-mono">
+                      <div className="text-ink uppercase tracking-wider">Relevant Coursework:</div>
+                      <p>
+                        Data Structures & Algorithms, Object-Oriented Programming (Java), DBMS, Operating Systems, Computer Networks, System Design, RESTful API Engineering.
+                      </p>
                     </div>
                   )}
                 </div>
               ))}
+            </div>
 
-              {/* LeetCode Verified Profile & Problem Solving Spotlight Card */}
-              <div className="p-6 rounded-2xl bg-canvas-muted border border-canvas-border space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-accent text-xs font-mono uppercase tracking-wider font-semibold">
-                    <Award className="w-4 h-4" />
-                    <span>Verified LeetCode Profile</span>
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-semibold">
-                    @{data.profile.leetcodeUsername || 'vaish_phob'}
-                  </span>
-                </div>
+            {/* Verified LeetCode Activity */}
+            <div className="space-y-4 pt-6 border-t border-canvas-border">
+              <div className="flex items-baseline justify-between">
+                <h3 className="font-mono text-xs text-ink uppercase tracking-widest">
+                  Algorithmic Practice
+                </h3>
+                <span className="font-mono text-xs text-accent">
+                  @{data.profile.leetcodeUsername || 'vaish_phob'}
+                </span>
+              </div>
 
+              <div className="font-display text-xl text-ink font-normal">
+                LeetCode & Problem Solving
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 font-mono text-xs border border-canvas-border p-3 bg-canvas-surface/20">
                 <div>
-                  <div className="text-xl font-display font-extrabold text-ink">
-                    LeetCode Problem Solving
-                  </div>
-                  <div className="text-xs font-mono text-ink-muted mt-0.5">
-                    Global Ranking: #{data.profile.leetcodeStats?.ranking?.toLocaleString() || '3,734,091'}
-                  </div>
+                  <div className="text-ink-secondary text-[10px] uppercase">Total Solved</div>
+                  <div className="text-base font-bold text-ink">{data.profile.leetcodeStats?.totalSolved || 30}</div>
                 </div>
-
-                {/* Solved breakdown */}
-                <div className="grid grid-cols-3 gap-2 text-center font-mono">
-                  <div className="p-2.5 rounded-lg bg-canvas-surface border border-canvas-border">
-                    <div className="text-base font-bold text-ink">{data.profile.leetcodeStats?.totalSolved || 30}</div>
-                    <div className="text-[10px] text-ink-muted">Total Solved</div>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-canvas-surface border border-canvas-border">
-                    <div className="text-base font-bold text-emerald-400">{data.profile.leetcodeStats?.easySolved || 20}</div>
-                    <div className="text-[10px] text-ink-muted">Easy</div>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-canvas-surface border border-canvas-border">
-                    <div className="text-base font-bold text-amber-400">{data.profile.leetcodeStats?.mediumSolved || 10}</div>
-                    <div className="text-[10px] text-ink-muted">Medium</div>
-                  </div>
+                <div>
+                  <div className="text-ink-secondary text-[10px] uppercase">Easy</div>
+                  <div className="text-base font-medium text-ink">{data.profile.leetcodeStats?.easySolved || 20}</div>
                 </div>
-
-                {/* Languages verified on LeetCode */}
-                <div className="space-y-1.5 pt-1">
-                  <div className="text-[11px] font-mono text-ink-muted">Verified Languages on LeetCode:</div>
-                  <div className="flex flex-wrap gap-2 text-xs font-mono">
-                    <span className="px-2 py-0.5 rounded bg-canvas-surface text-ink border border-canvas-border">
-                      C (28 solved)
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-canvas-surface text-ink border border-canvas-border">
-                      Java (3 solved)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-canvas-border flex items-center justify-between">
-                  <span className="text-[11px] font-mono text-ink-muted">Live GraphQL Synced</span>
-                  <a
-                    href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1.5 text-xs font-mono text-accent hover:underline font-semibold"
-                  >
-                    <span>leetcode.com/u/vaish_phob</span>
-                    <span>→</span>
-                  </a>
+                <div>
+                  <div className="text-ink-secondary text-[10px] uppercase">Medium</div>
+                  <div className="text-base font-medium text-ink">{data.profile.leetcodeStats?.mediumSolved || 10}</div>
                 </div>
               </div>
+
+              <div className="text-xs font-mono text-ink-secondary space-y-1">
+                <div>Verified Languages: C (28 solved), Java (3 solved)</div>
+                <div>Global Ranking: #{data.profile.leetcodeStats?.ranking?.toLocaleString() || '3,734,091'}</div>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="editorial-link font-mono text-xs text-ink hover:text-accent uppercase tracking-wider"
+                >
+                  View LeetCode Profile &nearr;
+                </a>
+              </div>
             </div>
+
           </div>
 
         </div>

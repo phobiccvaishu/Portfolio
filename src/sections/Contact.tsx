@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Mail, Github, Linkedin, MapPin, Send, CheckCircle2, AlertCircle, Copy, Check } from 'lucide-react';
 
 export const Contact: React.FC = () => {
   const { data } = usePortfolio();
@@ -40,208 +39,198 @@ export const Contact: React.FC = () => {
         setForm({ name: '', email: '', subject: '', message: '' });
       } else {
         setStatus('error');
-        setErrorMessage(json.error || 'Failed to submit message. Please try emailing directly.');
+        setErrorMessage(json.error || 'Failed to submit message. Please email directly.');
       }
     } catch (err: any) {
-      // In case server is offline or frontend-only mode
       setStatus('error');
-      setErrorMessage('Local server not reachable. Please send an email directly to vaishnavi1657@gmail.com.');
+      setErrorMessage('Server connection offline. Please email directly to ' + data.profile.email);
     }
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 border-t border-canvas-border relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="py-20 sm:py-28 border-b border-canvas-border text-left">
+      <div className="max-w-editorial mx-auto px-5 sm:px-8">
         
-        {/* Header */}
-        <div className="text-left space-y-3 mb-14">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-accent uppercase tracking-widest">
-            <span>06 // Connect</span>
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-12 sm:mb-16 pb-4 border-b border-canvas-border gap-4">
+          <div className="flex items-baseline space-x-3">
+            <span className="font-mono text-xs uppercase tracking-widest text-accent">06 /</span>
+            <h2 className="font-display text-3xl sm:text-4xl text-ink font-normal tracking-tight">
+              Contact & Inquiries
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-ink tracking-tight">
-            Initiate Conversation
-          </h2>
-          <p className="text-base text-ink-secondary max-w-xl">
-            Interested in discussing AI/ML engineering, student internships, or technical collaborations? Feel free to reach out.
-          </p>
+          <span className="font-mono text-xs text-ink-secondary uppercase tracking-widest">
+            Direct Communication
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        {/* 12-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           
-          {/* Direct Verified Channels (5 cols) */}
-          <div className="lg:col-span-5 space-y-6 text-left">
-            <div className="p-6 rounded-2xl bg-canvas-subtle border border-canvas-border space-y-6">
-              <h3 className="font-display font-bold text-lg text-ink">
+          {/* Direct Text Links (5 cols) */}
+          <div className="lg:col-span-5 space-y-8">
+            <div className="space-y-3">
+              <h3 className="font-mono text-xs text-ink uppercase tracking-widest">
                 Direct Channels
               </h3>
+              <p className="text-sm text-ink-secondary leading-relaxed">
+                For internship inquiries, engineering collaborations, or questions regarding my research and codebases.
+              </p>
+            </div>
 
-              {/* Email Card with Copy button */}
-              <div className="p-4 rounded-xl bg-canvas-muted border border-canvas-border space-y-2">
-                <div className="text-xs font-mono text-ink-muted flex items-center justify-between">
-                  <span>Verified Email</span>
+            <div className="space-y-4 font-mono text-sm border-t border-canvas-border pt-6">
+              <div className="space-y-1">
+                <div className="text-[11px] text-ink-secondary uppercase tracking-wider">Email Address</div>
+                <div className="flex items-baseline space-x-3">
+                  <a
+                    href={`mailto:${data.profile.email}`}
+                    className="editorial-link text-ink hover:text-accent font-medium"
+                  >
+                    {data.profile.email}
+                  </a>
                   <button
                     onClick={handleCopyEmail}
-                    className="inline-flex items-center space-x-1 text-accent hover:underline text-[11px]"
+                    className="text-[11px] text-accent uppercase tracking-wider hover:underline"
                   >
-                    {copiedEmail ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                    <span>{copiedEmail ? 'Copied' : 'Copy'}</span>
+                    {copiedEmail ? '[Copied]' : '[Copy]'}
                   </button>
                 </div>
-                <a
-                  href={`mailto:${data.profile.email}`}
-                  className="font-mono text-sm sm:text-base text-ink hover:text-accent font-medium block truncate transition-colors"
-                >
-                  {data.profile.email}
-                </a>
               </div>
 
-              {/* GitHub */}
-              <a
-                href={`https://github.com/${data.profile.githubUsername}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-3 p-4 rounded-xl bg-canvas-muted border border-canvas-border hover:border-canvas-borderStrong transition-all group"
-              >
-                <div className="p-2 rounded-lg bg-canvas-surface text-ink group-hover:text-accent transition-colors">
-                  <Github className="w-5 h-5" />
+              {data.profile.phone && (
+                <div className="space-y-1 pt-2">
+                  <div className="text-[11px] text-ink-secondary uppercase tracking-wider">Telephone</div>
+                  <a
+                    href={`tel:${data.profile.phone}`}
+                    className="editorial-link text-ink hover:text-accent"
+                  >
+                    {data.profile.phone}
+                  </a>
                 </div>
-                <div>
-                  <div className="text-xs font-mono text-ink-muted">GitHub Profile</div>
-                  <div className="text-sm font-semibold text-ink group-hover:text-accent transition-colors">
-                    github.com/{data.profile.githubUsername}
-                  </div>
-                </div>
-              </a>
+              )}
 
-              {/* LinkedIn */}
-              <a
-                href={`https://www.linkedin.com/in/${data.profile.linkedinSlug}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-3 p-4 rounded-xl bg-canvas-muted border border-canvas-border hover:border-canvas-borderStrong transition-all group"
-              >
-                <div className="p-2 rounded-lg bg-canvas-surface text-ink group-hover:text-accent transition-colors">
-                  <Linkedin className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-ink-muted">LinkedIn Network</div>
-                  <div className="text-sm font-semibold text-ink group-hover:text-accent transition-colors">
-                    linkedin.com/in/{data.profile.linkedinSlug}
-                  </div>
-                </div>
-              </a>
-
-              {/* Location */}
-              <div className="flex items-center space-x-3 p-4 rounded-xl bg-canvas-muted/50 border border-canvas-border">
-                <div className="p-2 rounded-lg bg-canvas-surface text-accent">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs font-mono text-ink-muted">Current Location</div>
-                  <div className="text-sm font-medium text-ink">
-                    {data.profile.location}
-                  </div>
+              <div className="space-y-1 pt-2">
+                <div className="text-[11px] text-ink-secondary uppercase tracking-wider">Profiles</div>
+                <div className="flex flex-wrap gap-x-5 gap-y-1">
+                  <a
+                    href={`https://github.com/${data.profile.githubUsername}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="editorial-link text-ink hover:text-accent"
+                  >
+                    GitHub &nearr;
+                  </a>
+                  <a
+                    href={`https://www.linkedin.com/in/${data.profile.linkedinSlug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="editorial-link text-ink hover:text-accent"
+                  >
+                    LinkedIn &nearr;
+                  </a>
+                  <a
+                    href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="editorial-link text-ink hover:text-accent"
+                  >
+                    LeetCode &nearr;
+                  </a>
                 </div>
               </div>
 
+              <div className="space-y-1 pt-2">
+                <div className="text-[11px] text-ink-secondary uppercase tracking-wider">Location</div>
+                <div className="text-ink">{data.profile.location}</div>
+              </div>
             </div>
           </div>
 
-          {/* Contact Dispatch Form (7 cols) */}
+          {/* Underline-Only Form (7 cols) */}
           <div className="lg:col-span-7">
-            <form
-              onSubmit={handleSubmit}
-              className="p-6 sm:p-8 rounded-2xl bg-canvas-subtle border border-canvas-border space-y-5 text-left"
-            >
-              <h3 className="font-display font-bold text-xl text-ink">
-                Send an Inquiry
+            <form onSubmit={handleSubmit} className="space-y-6 text-left">
+              <h3 className="font-mono text-xs text-ink uppercase tracking-widest pb-2 border-b border-canvas-border">
+                Send a Message
               </h3>
-              <p className="text-xs text-ink-secondary">
-                Validated message form securely logged to the backend server.
-              </p>
 
               {status === 'success' && (
-                <div className="p-4 rounded-xl bg-accent-muted border border-accent-border flex items-start space-x-3 text-xs text-ink">
-                  <CheckCircle2 className="w-4 h-4 text-accent flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold text-accent">Message dispatched successfully!</span>
-                    <p className="text-ink-secondary mt-0.5">
-                      Your inquiry has been registered in the database. I will review it and reply promptly.
-                    </p>
-                  </div>
+                <div className="p-3 bg-canvas-surface border-l-2 border-accent text-xs font-mono text-ink">
+                  Message logged to server storage. I will reply via email shortly.
                 </div>
               )}
 
               {status === 'error' && (
-                <div className="p-4 rounded-xl bg-red-950/40 border border-red-800/50 flex items-start space-x-3 text-xs text-red-300">
-                  <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-semibold">Notice:</span> {errorMessage}
-                  </div>
+                <div className="p-3 bg-canvas-surface border-l-2 border-accent text-xs font-mono text-accent">
+                  {errorMessage}
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono text-ink-muted">Your Name *</label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="space-y-1">
+                  <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+                    Your Name *
+                  </label>
                   <input
                     type="text"
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    placeholder="e.g. Alex Rivera"
-                    className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-4 py-2.5 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent"
+                    className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2.5 outline-none rounded-none transition-colors"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono text-ink-muted">Your Email *</label>
+                <div className="space-y-1">
+                  <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+                    Your Email *
+                  </label>
                   <input
                     type="email"
                     required
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    placeholder="alex@company.com"
-                    className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-4 py-2.5 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent"
+                    className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2.5 outline-none rounded-none transition-colors"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono text-ink-muted">Subject *</label>
+              <div className="space-y-1">
+                <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+                  Subject *
+                </label>
                 <input
                   type="text"
                   required
                   value={form.subject}
                   onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                  placeholder="Internship opportunity / Technical question"
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-4 py-2.5 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent"
+                  className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2.5 outline-none rounded-none transition-colors"
                 />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono text-ink-muted">Message *</label>
+              <div className="space-y-1">
+                <label className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+                  Message Content *
+                </label>
                 <textarea
                   required
                   rows={4}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="Briefly describe your team, role, or project..."
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl p-4 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent resize-none"
+                  className="w-full bg-transparent border-b border-canvas-border focus:border-accent text-ink text-sm py-2.5 outline-none rounded-none resize-none transition-colors font-sans"
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={status === 'submitting'}
-                className="w-full py-3.5 rounded-xl bg-accent text-black font-semibold text-sm hover:bg-accent-hover transition-colors flex items-center justify-center space-x-2 disabled:opacity-50"
-              >
-                <Send className="w-4 h-4" />
-                <span>{status === 'submitting' ? 'Dispatching Message...' : 'Send Message'}</span>
-              </button>
+              <div className="pt-2 flex items-center justify-between">
+                <button
+                  type="submit"
+                  disabled={status === 'submitting'}
+                  className="px-6 py-2.5 bg-ink text-canvas hover:bg-accent hover:text-white transition-colors font-mono text-xs uppercase tracking-widest disabled:opacity-50"
+                >
+                  {status === 'submitting' ? 'Transmitting...' : 'Dispatch Message'}
+                </button>
 
-              <div className="text-[11px] font-mono text-ink-muted text-center pt-1">
-                Data sent securely directly to Vaishnavi's local server storage.
+                <span className="font-mono text-[10px] text-ink-secondary uppercase">
+                  Logged in server/data/messages.json
+                </span>
               </div>
             </form>
           </div>

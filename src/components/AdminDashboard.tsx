@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Credential, CredentialType, Project, Skill } from '../types/portfolio';
+import { Credential, CredentialType } from '../types/portfolio';
 import {
   RefreshCw,
   Upload,
   FileText,
   ShieldCheck,
   CheckCircle2,
-  AlertCircle,
   Plus,
   Trash2,
-  Edit,
   Eye,
   EyeOff,
   Github,
@@ -45,7 +43,6 @@ export const AdminDashboard: React.FC = () => {
     addCredential,
     deleteCredential,
     updateCredential,
-    addSkill,
     deleteSkill,
     updateProject,
     resetToVerifiedInitial,
@@ -143,7 +140,7 @@ export const AdminDashboard: React.FC = () => {
     setSyncingGithub(false);
     if (result.success) {
       setGithubSyncReport(result.report);
-      setSyncStatusMsg('Live GitHub API synchronization successful!');
+      setSyncStatusMsg('Live GitHub API synchronization successful.');
     } else {
       setSyncStatusMsg(`Sync error: ${result.message}`);
     }
@@ -157,7 +154,7 @@ export const AdminDashboard: React.FC = () => {
     setSyncingLeetCode(false);
     if (result.success) {
       setLeetcodeSyncReport(result.stats);
-      setLeetcodeSyncMsg('Live LeetCode GraphQL synchronization successful!');
+      setLeetcodeSyncMsg('Live LeetCode GraphQL synchronization successful.');
     } else {
       setLeetcodeSyncMsg(`Sync error: ${result.message}`);
     }
@@ -199,7 +196,7 @@ export const AdminDashboard: React.FC = () => {
     if (!parsedLinkedinData) return;
     const res = importLinkedInData(parsedLinkedinData);
     if (res.success) {
-      setLinkedinSuccessMsg(`Successfully imported and merged fields into portfolio!`);
+      setLinkedinSuccessMsg(`Successfully imported and merged fields into portfolio.`);
       setParsedLinkedinData(null);
       setLinkedinRawText('');
       setLinkedinFile(null);
@@ -245,7 +242,7 @@ export const AdminDashboard: React.FC = () => {
       };
 
       addCredential(newCred);
-      setCertSuccessMsg('Credential successfully registered and published!');
+      setCertSuccessMsg('Credential successfully registered.');
       setCertTitle('');
       setCertIssuer('');
       setCertVerifyUrl('');
@@ -268,60 +265,57 @@ export const AdminDashboard: React.FC = () => {
       email: profileForm.email,
       bio: profileForm.bio.split('\n\n').filter(Boolean)
     });
-    alert('Profile information updated successfully!');
+    alert('Profile information updated successfully.');
   };
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
+    <div className="max-w-editorial mx-auto px-5 sm:px-8 py-14 sm:py-20 text-left space-y-10">
       
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-8 border-b border-canvas-border gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between pb-6 border-b border-canvas-border gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-accent uppercase tracking-widest mb-1">
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Profile Data Engine</span>
+          <div className="font-mono text-xs uppercase tracking-widest text-accent mb-1">
+            Data & Integration Pipeline
           </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-ink">
-            Management & Data Pipeline
+          <h1 className="font-display text-3xl sm:text-4xl font-normal text-ink">
+            Profile Administration
           </h1>
-          <p className="text-xs sm:text-sm text-ink-muted mt-1">
-            Maintain authentic content, execute GitHub synchronizations, parse LinkedIn exports, and manage certificate documents.
+          <p className="text-xs font-mono text-ink-secondary mt-1">
+            Execute GitHub and LeetCode synchronizations, parse LinkedIn profile documents, and inspect incoming inquiries.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 font-mono text-xs">
           <button
             onClick={() => {
-              if (confirm('Reset all portfolio content back to the verified GitHub snapshot?')) {
+              if (confirm('Reset all portfolio content back to the verified snapshot?')) {
                 resetToVerifiedInitial();
               }
             }}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-canvas-muted hover:bg-canvas-surface text-ink-secondary hover:text-ink text-xs font-mono border border-canvas-border transition-colors"
+            className="px-3 py-1.5 border border-canvas-border text-ink-secondary hover:text-ink uppercase tracking-wider transition-colors"
           >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Reset to Snapshot</span>
+            Reset Snapshot
           </button>
 
           <button
             onClick={() => setActiveView('portfolio')}
-            className="flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-accent text-black font-semibold text-xs hover:bg-accent-hover transition-colors"
+            className="px-3.5 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white uppercase tracking-wider transition-colors"
           >
-            <Eye className="w-4 h-4" />
-            <span>View Public Website</span>
+            View Site &rarr;
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8 border-b border-canvas-border pb-4">
+      <div className="flex flex-wrap gap-2 border-b border-canvas-border pb-4 font-mono text-xs">
         {[
-          { id: 'inquiries', label: `Inquiries Inbox (${inquiries.length})`, icon: <Mail className="w-4 h-4" />, highlight: inquiries.length > 0 },
-          { id: 'sources', label: 'Sources & Sync', icon: <ShieldCheck className="w-4 h-4" /> },
-          { id: 'linkedin', label: 'LinkedIn Importer', icon: <Linkedin className="w-4 h-4" /> },
-          { id: 'credentials', label: 'Certificates & Documents', icon: <FileText className="w-4 h-4" /> },
-          { id: 'profile', label: 'Profile & Headline', icon: <Edit className="w-4 h-4" /> },
-          { id: 'projects', label: 'Projects Manager', icon: <Github className="w-4 h-4" /> },
-          { id: 'skills', label: 'Skills & Stack', icon: <CheckCircle2 className="w-4 h-4" /> },
+          { id: 'inquiries', label: `Inquiries (${inquiries.length})` },
+          { id: 'sources', label: 'Sources & Sync' },
+          { id: 'linkedin', label: 'LinkedIn Importer' },
+          { id: 'credentials', label: 'Certificates' },
+          { id: 'profile', label: 'Profile Editor' },
+          { id: 'projects', label: 'Projects' },
+          { id: 'skills', label: 'Skills' },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -329,16 +323,13 @@ export const AdminDashboard: React.FC = () => {
               setActiveTab(tab.id as any);
               if (tab.id === 'inquiries') fetchInquiries();
             }}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-medium transition-all ${
+            className={`px-3 py-1.5 border uppercase tracking-wider transition-colors ${
               activeTab === tab.id
-                ? 'bg-accent text-black font-semibold'
-                : tab.highlight
-                ? 'bg-canvas-muted text-accent border border-accent-border font-semibold'
-                : 'bg-canvas-muted text-ink-secondary hover:text-ink border border-canvas-border'
+                ? 'bg-ink text-canvas border-ink font-medium'
+                : 'border-canvas-border text-ink-secondary hover:text-ink'
             }`}
           >
-            {tab.icon}
-            <span>{tab.label}</span>
+            {tab.label}
           </button>
         ))}
       </div>
@@ -346,110 +337,79 @@ export const AdminDashboard: React.FC = () => {
       {/* TAB 0: Inquiries Inbox */}
       {activeTab === 'inquiries' && (
         <div className="space-y-6">
-          <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-canvas-border pb-4">
+          <div className="border border-canvas-border p-5 sm:p-7 space-y-5 bg-canvas-surface/20">
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-3 border-b border-canvas-border pb-4">
               <div>
-                <h2 className="font-display font-bold text-lg text-ink flex items-center gap-2">
-                  <span>Contact Inquiries Inbox</span>
-                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-accent text-black font-semibold">
-                    {inquiries.length} Messages
-                  </span>
+                <h2 className="font-display text-2xl text-ink font-normal">
+                  Inquiries Inbox ({inquiries.length})
                 </h2>
-                <p className="text-xs text-ink-secondary mt-1">
-                  Questions and messages submitted through your website contact form. Persistently stored in <code className="text-accent font-mono">server/data/messages.json</code>.
+                <p className="text-xs font-mono text-ink-secondary mt-1">
+                  Persistently stored in <code className="text-accent">server/data/messages.json</code>.
                 </p>
               </div>
 
               <button
                 onClick={fetchInquiries}
                 disabled={loadingInquiries}
-                className="px-3 py-1.5 rounded-xl bg-canvas-muted hover:bg-canvas-surface text-ink text-xs font-mono border border-canvas-border flex items-center space-x-1.5 self-start transition-colors"
+                className="px-3 py-1 border border-canvas-border hover:border-ink text-xs font-mono uppercase tracking-wider self-start transition-colors"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${loadingInquiries ? 'animate-spin' : ''}`} />
-                <span>Refresh Inbox</span>
+                {loadingInquiries ? 'Refreshing...' : 'Refresh List'}
               </button>
             </div>
 
             {inquiries.length === 0 ? (
-              <div className="p-12 text-center space-y-3">
-                <Mail className="w-10 h-10 text-ink-muted mx-auto" />
-                <div className="font-display font-semibold text-ink">No inquiries received yet</div>
-                <p className="text-xs text-ink-secondary max-w-sm mx-auto">
-                  When visitors or recruiters submit messages via the contact form on your portfolio, they will appear here immediately.
-                </p>
+              <div className="py-12 text-center text-xs font-mono text-ink-secondary">
+                No inquiries logged in server storage.
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="divide-y divide-canvas-border">
                 {inquiries.map((msg) => {
                   const replyMailto = `mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}&body=Hi ${encodeURIComponent(msg.name)},%0D%0A%0D%0AThank you for reaching out regarding "${encodeURIComponent(msg.subject)}".%0D%0A%0D%0ABest regards,%0D%0AVaishnavi%0D%0Ahttps://github.com/phobiccvaishu`;
 
                   return (
-                    <div
-                      key={msg.id}
-                      className="p-5 rounded-xl bg-canvas-muted border border-canvas-border hover:border-canvas-borderStrong transition-all space-y-3 text-left"
-                    >
-                      {/* Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-canvas-border/50 pb-2.5">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 rounded-full bg-accent/15 border border-accent-border text-accent font-display font-bold text-xs flex items-center justify-center">
-                            {msg.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <div className="font-display font-bold text-ink text-sm flex items-center gap-2">
-                              <span>{msg.name}</span>
-                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-canvas-surface text-ink-muted border border-canvas-border">
-                                {new Date(msg.receivedAt).toLocaleDateString()} at {new Date(msg.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                            </div>
-                            <div className="text-xs font-mono text-accent">
-                              {msg.email}
-                            </div>
-                          </div>
+                    <div key={msg.id} className="py-5 space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 font-mono text-xs">
+                        <div>
+                          <span className="text-ink font-medium">{msg.name}</span>
+                          <span className="text-ink-secondary ml-2">&lt;{msg.email}&gt;</span>
                         </div>
-
-                        {/* Subject */}
-                        <div className="text-xs font-mono text-ink-secondary bg-canvas-surface px-2.5 py-1 rounded border border-canvas-border self-start">
-                          Subject: <span className="text-ink font-medium">{msg.subject}</span>
-                        </div>
+                        <span className="text-ink-secondary text-[11px]">
+                          {new Date(msg.receivedAt).toLocaleDateString()} at {new Date(msg.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
                       </div>
 
-                      {/* Message Body */}
-                      <div className="p-3.5 rounded-lg bg-canvas-surface border border-canvas-border/60 text-xs sm:text-sm text-ink-secondary leading-relaxed font-sans whitespace-pre-wrap">
+                      <div className="font-mono text-xs text-ink font-medium">
+                        Subject: {msg.subject}
+                      </div>
+
+                      <div className="p-3 bg-canvas border border-canvas-border text-xs sm:text-sm text-ink-secondary font-sans whitespace-pre-wrap leading-relaxed">
                         {msg.message}
                       </div>
 
-                      {/* Actions */}
-                      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-                        <div className="flex items-center gap-2">
-                          {/* Reply Button */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono pt-1">
+                        <div className="flex items-center space-x-3">
                           <a
                             href={replyMailto}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-accent text-black font-semibold hover:bg-accent-hover transition-colors shadow-sm"
+                            className="px-3 py-1 bg-ink text-canvas hover:bg-accent hover:text-white uppercase tracking-wider transition-colors"
                           >
-                            <Send className="w-3.5 h-3.5" />
-                            <span>Reply via Email ({msg.email})</span>
+                            Reply via Email &rarr;
                           </a>
 
-                          {/* Copy Email Button */}
                           <button
                             onClick={() => handleCopyEmail(msg.id, msg.email)}
-                            className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-canvas-surface hover:bg-canvas-subtle text-ink-secondary hover:text-ink border border-canvas-border transition-colors"
+                            className="px-2.5 py-1 border border-canvas-border hover:border-ink uppercase tracking-wider text-ink-secondary hover:text-ink"
                           >
-                            {copiedMsgId === msg.id ? <Check className="w-3.5 h-3.5 text-accent" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span>{copiedMsgId === msg.id ? 'Copied Email' : 'Copy Email'}</span>
+                            {copiedMsgId === msg.id ? '[Copied]' : 'Copy Email'}
                           </button>
                         </div>
 
-                        {/* Delete Button */}
                         <button
                           onClick={() => handleDeleteInquiry(msg.id)}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-950/30 transition-colors"
-                          title="Delete message"
+                          className="text-accent hover:underline uppercase text-[11px]"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          <span>Delete</span>
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -461,95 +421,66 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 1: Sources & GitHub Sync */}
+      {/* TAB 1: Sources & Sync */}
       {activeTab === 'sources' && (
         <div className="space-y-8">
-          {/* Phase 1 Source Inventory Table */}
-          <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-            <h2 className="font-display font-bold text-lg text-ink">
-              Source Inventory (Phase 1 Audit)
+          <div className="border border-canvas-border p-5 sm:p-7 space-y-5 bg-canvas-surface/20">
+            <h2 className="font-display text-2xl text-ink font-normal">
+              Active Data Sources & Ingestion Channels
             </h2>
             <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
-                <thead className="bg-canvas-muted text-ink-muted uppercase font-mono border-b border-canvas-border">
+              <table className="w-full text-xs font-mono text-left border border-canvas-border">
+                <thead className="bg-canvas border-b border-canvas-border text-ink-secondary uppercase">
                   <tr>
-                    <th className="p-3">Source Channel</th>
-                    <th className="p-3">Legitimate Access Status</th>
-                    <th className="p-3">Data Retrieved</th>
-                    <th className="p-3">Actions / Fallback</th>
+                    <th className="p-3">Source</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3">Verified Data</th>
+                    <th className="p-3">Trigger</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-canvas-border text-ink-secondary">
                   <tr>
-                    <td className="p-3 font-medium text-ink flex items-center space-x-2">
-                      <Github className="w-4 h-4 text-accent" />
-                      <span>GitHub API (@phobiccvaishu)</span>
-                    </td>
-                    <td className="p-3">
-                      <span className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 font-mono text-[11px]">
-                        Connected (Official API)
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      Profile, 6 repositories, commit history, README specifications, tech tags
-                    </td>
+                    <td className="p-3 font-medium text-ink">GitHub REST API (@phobiccvaishu)</td>
+                    <td className="p-3 text-accent">[Connected]</td>
+                    <td className="p-3">6 repositories, commit histories, README architectures</td>
                     <td className="p-3">
                       <button
                         onClick={handleGithubSync}
                         disabled={syncingGithub}
-                        className="px-3 py-1 rounded bg-canvas-muted text-accent hover:bg-canvas-surface border border-accent-border font-mono text-[11px] flex items-center space-x-1"
+                        className="px-2.5 py-1 border border-canvas-border hover:border-ink uppercase text-[11px]"
                       >
-                        <RefreshCw className={`w-3 h-3 ${syncingGithub ? 'animate-spin' : ''}`} />
-                        <span>Sync Now</span>
+                        {syncingGithub ? 'Syncing...' : 'Sync'}
                       </button>
                     </td>
                   </tr>
 
-                  {/* LeetCode Row */}
                   <tr>
-                    <td className="p-3 font-medium text-ink flex items-center space-x-2">
-                      <Code2 className="w-4 h-4 text-accent" />
-                      <span>LeetCode GraphQL (@{data.profile.leetcodeUsername || 'vaish_phob'})</span>
-                    </td>
+                    <td className="p-3 font-medium text-ink">LeetCode GraphQL (@{data.profile.leetcodeUsername || 'vaish_phob'})</td>
+                    <td className="p-3 text-accent">[Connected]</td>
                     <td className="p-3">
-                      <span className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 font-mono text-[11px]">
-                        Connected (Official GraphQL)
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      {data.profile.leetcodeStats?.totalSolved || 30} Solved ({data.profile.leetcodeStats?.easySolved || 20} Easy, {data.profile.leetcodeStats?.mediumSolved || 10} Med), C (28) & Java (3) verified
+                      {data.profile.leetcodeStats?.totalSolved || 30} Solved ({data.profile.leetcodeStats?.easySolved || 20}E / {data.profile.leetcodeStats?.mediumSolved || 10}M), C (28) & Java (3)
                     </td>
                     <td className="p-3">
                       <button
                         onClick={handleLeetCodeSync}
                         disabled={syncingLeetCode}
-                        className="px-3 py-1 rounded bg-canvas-muted text-accent hover:bg-canvas-surface border border-accent-border font-mono text-[11px] flex items-center space-x-1"
+                        className="px-2.5 py-1 border border-canvas-border hover:border-ink uppercase text-[11px]"
                       >
-                        <RefreshCw className={`w-3 h-3 ${syncingLeetCode ? 'animate-spin' : ''}`} />
-                        <span>Sync Now</span>
+                        {syncingLeetCode ? 'Syncing...' : 'Sync'}
                       </button>
                     </td>
                   </tr>
 
                   <tr>
-                    <td className="p-3 font-medium text-ink flex items-center space-x-2">
-                      <Linkedin className="w-4 h-4 text-blue-400" />
-                      <span>LinkedIn Profile</span>
-                    </td>
-                    <td className="p-3">
-                      <span className="px-2 py-0.5 rounded bg-amber-950/60 text-amber-400 border border-amber-800/50 font-mono text-[11px]">
-                        Authwall (HTTP 999)
-                      </span>
-                    </td>
-                    <td className="p-3">
-                      Public direct scraping legitimately blocked. PDF / CSV data import active.
-                    </td>
+                    <td className="p-3 font-medium text-ink">LinkedIn Profile</td>
+                    <td className="p-3 text-ink-secondary">[Authwall 999]</td>
+                    <td className="p-3">Direct scraping legitimately blocked; file import active</td>
                     <td className="p-3">
                       <button
                         onClick={() => setActiveTab('linkedin')}
-                        className="px-3 py-1 rounded bg-canvas-muted text-ink hover:text-accent border border-canvas-border font-mono text-[11px]"
+                        className="px-2.5 py-1 border border-canvas-border hover:border-ink uppercase text-[11px]"
                       >
-                        Use Import Pipeline
+                        Import File
                       </button>
                     </td>
                   </tr>
@@ -558,126 +489,57 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             {syncStatusMsg && (
-              <div className="p-3 rounded-xl bg-accent-muted border border-accent-border text-xs text-ink font-mono flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-accent" />
-                <span>{syncStatusMsg}</span>
+              <div className="p-3 border-l-2 border-accent bg-canvas text-xs font-mono text-ink">
+                {syncStatusMsg}
               </div>
             )}
 
             {leetcodeSyncMsg && (
-              <div className="p-3 rounded-xl bg-accent-muted border border-accent-border text-xs text-ink font-mono flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-accent" />
-                <span>{leetcodeSyncMsg}</span>
+              <div className="p-3 border-l-2 border-accent bg-canvas text-xs font-mono text-ink">
+                {leetcodeSyncMsg}
               </div>
             )}
           </div>
-
-          {/* LeetCode Live Sync Report */}
-          {(leetcodeSyncReport || data.profile.leetcodeStats) && (
-            <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-              <h3 className="font-display font-bold text-base text-ink flex items-center gap-2">
-                <Code2 className="w-4 h-4 text-accent" />
-                <span>LeetCode GraphQL Live Sync Results</span>
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">Username:</div>
-                  <div className="text-ink font-bold">@{data.profile.leetcodeUsername || 'vaish_phob'}</div>
-                </div>
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">Global Ranking:</div>
-                  <div className="text-accent font-bold">#{data.profile.leetcodeStats?.ranking?.toLocaleString() || '3,734,091'}</div>
-                </div>
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">Total Solved:</div>
-                  <div className="text-emerald-400 font-bold">{data.profile.leetcodeStats?.totalSolved || 30} ({data.profile.leetcodeStats?.easySolved || 20}E / {data.profile.leetcodeStats?.mediumSolved || 10}M)</div>
-                </div>
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">Languages:</div>
-                  <div className="text-ink font-bold">C (28) & Java (3)</div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* GitHub Live Sync Report */}
-          {githubSyncReport && (
-            <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-              <h3 className="font-display font-bold text-base text-ink">
-                GitHub API Live Sync Results
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">User:</div>
-                  <div className="text-ink font-bold">{githubSyncReport.user.login}</div>
-                </div>
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">Public Repos:</div>
-                  <div className="text-accent font-bold">{githubSyncReport.repositoriesCount}</div>
-                </div>
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">Location:</div>
-                  <div className="text-ink font-bold">{githubSyncReport.user.location}</div>
-                </div>
-                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
-                  <div className="text-ink-muted">API Status:</div>
-                  <div className="text-emerald-400 font-bold">200 OK</div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       )}
 
       {/* TAB 2: LinkedIn Importer */}
       {activeTab === 'linkedin' && (
-        <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-6">
+        <div className="border border-canvas-border p-5 sm:p-7 space-y-6 bg-canvas-surface/20">
           <div>
-            <h2 className="font-display font-bold text-lg text-ink">
-              LinkedIn Profile Import Pipeline
+            <h2 className="font-display text-2xl text-ink font-normal">
+              LinkedIn Profile Ingestion
             </h2>
-            <p className="text-xs text-ink-secondary mt-1">
-              Compliant data ingestion: Upload a LinkedIn profile PDF, data export file, or paste text directly. The engine parses the data and presents a confirmation screen before publishing.
+            <p className="text-xs font-mono text-ink-secondary mt-1">
+              Upload a LinkedIn PDF export (Profile &gt; More &gt; Save to PDF) or paste plain text. The parser validates fields before publishing.
             </p>
           </div>
 
           {linkedinSuccessMsg && (
-            <div className="p-3 rounded-xl bg-accent-muted border border-accent-border text-xs text-ink font-mono flex items-center space-x-2">
-              <CheckCircle2 className="w-4 h-4 text-accent" />
-              <span>{linkedinSuccessMsg}</span>
+            <div className="p-3 border-l-2 border-accent bg-canvas text-xs font-mono text-ink">
+              {linkedinSuccessMsg}
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* File Upload Option */}
-            <div className="p-5 rounded-xl bg-canvas-muted border border-canvas-border space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-mono text-accent">
-                <Upload className="w-4 h-4" />
-                <span>Method A: Upload Profile PDF / Export</span>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-mono text-xs">
+            <div className="p-4 border border-canvas-border space-y-2 bg-canvas">
+              <div className="text-ink uppercase tracking-wider">Method A: Upload Document</div>
               <input
                 type="file"
                 accept=".pdf,.txt,.json,.csv"
                 onChange={(e) => setLinkedinFile(e.target.files ? e.target.files[0] : null)}
-                className="w-full text-xs text-ink file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-accent file:text-black hover:file:bg-accent-hover cursor-pointer"
+                className="w-full text-xs text-ink file:mr-3 file:py-1 file:px-2 file:border file:border-canvas-border file:text-xs file:font-mono file:bg-canvas-surface cursor-pointer"
               />
-              <p className="text-[11px] text-ink-muted">
-                Tip: On LinkedIn profile, click "More" &gt; "Save to PDF" and upload that file here.
-              </p>
             </div>
 
-            {/* Paste Text Option */}
-            <div className="p-5 rounded-xl bg-canvas-muted border border-canvas-border space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-mono text-accent">
-                <FileText className="w-4 h-4" />
-                <span>Method B: Paste Profile Plain Text</span>
-              </div>
+            <div className="p-4 border border-canvas-border space-y-2 bg-canvas">
+              <div className="text-ink uppercase tracking-wider">Method B: Paste Plain Text</div>
               <textarea
                 rows={3}
                 value={linkedinRawText}
                 onChange={(e) => setLinkedinRawText(e.target.value)}
-                placeholder="Paste text from your LinkedIn about/experience sections..."
-                className="w-full bg-canvas-surface border border-canvas-border rounded-xl p-3 text-xs text-ink placeholder:text-ink-muted focus:outline-none focus:border-accent resize-none font-mono"
+                placeholder="Paste experience or about summary..."
+                className="w-full bg-transparent border border-canvas-border p-2 text-xs text-ink outline-none font-mono"
               />
             </div>
           </div>
@@ -685,66 +547,31 @@ export const AdminDashboard: React.FC = () => {
           <button
             onClick={handleParseLinkedin}
             disabled={parsingLinkedin || (!linkedinFile && !linkedinRawText)}
-            className="px-5 py-2.5 rounded-xl bg-accent text-black font-semibold text-xs hover:bg-accent-hover transition-colors flex items-center space-x-2 disabled:opacity-50"
+            className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider disabled:opacity-50"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${parsingLinkedin ? 'animate-spin' : ''}`} />
-            <span>{parsingLinkedin ? 'Parsing Document...' : 'Run Extraction Pipeline'}</span>
+            {parsingLinkedin ? 'Parsing...' : 'Execute Parser &rarr;'}
           </button>
 
-          {/* Parsed Data Review Screen */}
           {parsedLinkedinData && (
-            <div className="mt-6 p-6 rounded-xl bg-canvas-muted border border-accent-border space-y-4">
-              <div className="flex items-center justify-between border-b border-canvas-border pb-3">
-                <div className="flex items-center space-x-2 text-accent text-sm font-semibold">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>Review Extracted Fields Before Publishing</span>
-                </div>
-                <span className="text-[11px] font-mono text-ink-muted">
-                  Source: Uploaded LinkedIn Document
-                </span>
+            <div className="p-5 border border-canvas-border bg-canvas space-y-3 font-mono text-xs">
+              <div className="text-accent uppercase tracking-wider">Review Parsed Fields</div>
+              <div><span className="text-ink-secondary">Name: </span>{parsedLinkedinData.fullName || 'Not detected'}</div>
+              <div><span className="text-ink-secondary">Headline: </span>{parsedLinkedinData.headline || 'Not detected'}</div>
+              {parsedLinkedinData.about && <div><span className="text-ink-secondary">About: </span>{parsedLinkedinData.about}</div>}
+              <div>
+                <span className="text-ink-secondary">Skills: </span>
+                {parsedLinkedinData.skills.join(', ') || 'None'}
               </div>
-
-              <div className="space-y-3 text-xs font-mono">
-                <div>
-                  <span className="text-ink-muted">Detected Name: </span>
-                  <span className="text-ink font-semibold">{parsedLinkedinData.fullName || 'Not detected'}</span>
-                </div>
-                <div>
-                  <span className="text-ink-muted">Detected Headline: </span>
-                  <span className="text-ink">{parsedLinkedinData.headline || 'Not detected'}</span>
-                </div>
-                {parsedLinkedinData.about && (
-                  <div>
-                    <span className="text-ink-muted">About Summary: </span>
-                    <span className="text-ink-secondary">{parsedLinkedinData.about}</span>
-                  </div>
-                )}
-                <div>
-                  <span className="text-ink-muted">Detected Skills: </span>
-                  <div className="flex flex-wrap gap-1.5 mt-1.5">
-                    {parsedLinkedinData.skills.length > 0 ? (
-                      parsedLinkedinData.skills.map((s: string) => (
-                        <span key={s} className="px-2 py-0.5 rounded bg-canvas-surface text-accent border border-canvas-border">
-                          {s}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-ink-muted">None detected automatically</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-canvas-border flex items-center space-x-3">
+              <div className="pt-2 flex items-center space-x-3">
                 <button
                   onClick={handleApplyLinkedinData}
-                  className="px-4 py-2 rounded-xl bg-accent text-black font-semibold text-xs hover:bg-accent-hover transition-colors"
+                  className="px-3.5 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white uppercase"
                 >
-                  Approve and Merge Into Portfolio
+                  Confirm & Apply
                 </button>
                 <button
                   onClick={() => setParsedLinkedinData(null)}
-                  className="px-4 py-2 rounded-xl bg-canvas-surface text-ink-muted hover:text-ink text-xs transition-colors"
+                  className="px-3 py-1.5 border border-canvas-border uppercase text-ink-secondary"
                 >
                   Discard
                 </button>
@@ -754,94 +581,85 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 3: Certificates & Documents */}
+      {/* TAB 3: Certificates */}
       {activeTab === 'credentials' && (
         <div className="space-y-8">
-          {/* Upload Form */}
-          <form
-            onSubmit={handleUploadCertificate}
-            className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4"
-          >
-            <h2 className="font-display font-bold text-lg text-ink">
-              Upload & Register New Credential
+          <form onSubmit={handleUploadCertificate} className="border border-canvas-border p-5 sm:p-7 space-y-4 bg-canvas-surface/20">
+            <h2 className="font-display text-2xl text-ink font-normal">
+              Register New Credential
             </h2>
 
             {certSuccessMsg && (
-              <div className="p-3 rounded-xl bg-accent-muted border border-accent-border text-xs text-ink font-mono flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-accent" />
-                <span>{certSuccessMsg}</span>
+              <div className="p-3 border-l-2 border-accent bg-canvas text-xs font-mono text-ink">
+                {certSuccessMsg}
               </div>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
               <div className="space-y-1">
-                <label className="text-ink-muted">Credential Title *</label>
+                <label className="text-ink-secondary uppercase">Credential Title *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Deep Learning Specialization"
                   value={certTitle}
                   onChange={(e) => setCertTitle(e.target.value)}
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-ink-muted">Issuing Organization *</label>
+                <label className="text-ink-secondary uppercase">Issuing Organization *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Coursera / DeepLearning.AI / SRMIST"
                   value={certIssuer}
                   onChange={(e) => setCertIssuer(e.target.value)}
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-ink-muted">Category *</label>
+                <label className="text-ink-secondary uppercase">Category *</label>
                 <select
                   value={certType}
                   onChange={(e) => setCertType(e.target.value as CredentialType)}
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-canvas border border-canvas-border p-2 text-ink outline-none"
                 >
                   <option value="course">Course Completion</option>
                   <option value="certification">Professional Certification</option>
                   <option value="internship">Internship Certificate</option>
                   <option value="training">Training Program</option>
-                  <option value="award">Award / Achievement</option>
+                  <option value="award">Award / Recognition</option>
                 </select>
               </div>
 
               <div className="space-y-1">
-                <label className="text-ink-muted">Issue Date</label>
+                <label className="text-ink-secondary uppercase">Date / Term</label>
                 <input
                   type="text"
-                  placeholder="e.g. Nov 2025"
                   value={certDate}
                   onChange={(e) => setCertDate(e.target.value)}
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
                 />
               </div>
 
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-ink-muted">Verification URL (Optional)</label>
+                <label className="text-ink-secondary uppercase">Verification URL (Optional)</label>
                 <input
                   type="url"
-                  placeholder="https://coursera.org/verify/..."
                   value={certVerifyUrl}
                   onChange={(e) => setCertVerifyUrl(e.target.value)}
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                  className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
                 />
               </div>
 
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-ink-muted">Certificate Document File (PDF, PNG, JPG)</label>
+                <label className="text-ink-secondary uppercase">Document File (PDF / PNG / JPG)</label>
                 <input
                   type="file"
                   accept=".pdf,.png,.jpg,.jpeg"
                   onChange={(e) => setCertFile(e.target.files ? e.target.files[0] : null)}
-                  className="w-full bg-canvas-muted border border-canvas-border rounded-xl p-2 text-ink file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-accent file:text-black file:text-xs file:font-semibold cursor-pointer"
+                  className="w-full text-xs text-ink file:mr-3 file:py-1 file:px-2 file:border file:border-canvas-border file:text-xs file:font-mono file:bg-canvas-surface cursor-pointer"
                 />
               </div>
             </div>
@@ -849,50 +667,36 @@ export const AdminDashboard: React.FC = () => {
             <button
               type="submit"
               disabled={uploadingCert}
-              className="px-5 py-2.5 rounded-xl bg-accent text-black font-semibold text-xs hover:bg-accent-hover transition-colors flex items-center space-x-2"
+              className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>{uploadingCert ? 'Uploading...' : 'Save & Publish Credential'}</span>
+              {uploadingCert ? 'Uploading...' : 'Save Credential'}
             </button>
           </form>
 
-          {/* Existing Credentials List */}
-          <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-            <h3 className="font-display font-bold text-base text-ink">
-              Current Credentials List ({data.credentials.length})
+          {/* List */}
+          <div className="border border-canvas-border p-5 sm:p-7 space-y-4 bg-canvas-surface/20">
+            <h3 className="font-display text-xl text-ink font-normal">
+              Registered Credentials ({data.credentials.length})
             </h3>
-            <div className="space-y-3">
+            <div className="divide-y divide-canvas-border font-mono text-xs">
               {data.credentials.map((cred) => (
-                <div
-                  key={cred.id}
-                  className="p-4 rounded-xl bg-canvas-muted border border-canvas-border flex items-center justify-between text-xs"
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-ink">{cred.title}</span>
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-canvas-surface text-accent">
-                        {cred.type}
-                      </span>
-                    </div>
-                    <div className="text-ink-muted font-mono">
-                      {cred.issuer} • {cred.issueDate}
-                    </div>
+                <div key={cred.id} className="py-3 flex items-center justify-between">
+                  <div>
+                    <div className="text-ink font-medium">{cred.title}</div>
+                    <div className="text-ink-secondary text-[11px]">{cred.issuer} &bull; {cred.issueDate}</div>
                   </div>
-
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <button
                       onClick={() => updateCredential({ ...cred, isPublic: !cred.isPublic })}
-                      className="p-1.5 rounded-lg bg-canvas-surface text-ink-secondary hover:text-ink border border-canvas-border"
-                      title={cred.isPublic ? 'Hide from public view' : 'Make public'}
+                      className="text-xs uppercase text-ink-secondary hover:text-ink"
                     >
-                      {cred.isPublic ? <Eye className="w-3.5 h-3.5 text-accent" /> : <EyeOff className="w-3.5 h-3.5" />}
+                      {cred.isPublic ? '[Public]' : '[Hidden]'}
                     </button>
                     <button
                       onClick={() => deleteCredential(cred.id)}
-                      className="p-1.5 rounded-lg bg-canvas-surface text-red-400 hover:text-red-300 border border-canvas-border"
-                      title="Delete credential"
+                      className="text-accent hover:underline uppercase text-[11px]"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -902,122 +706,102 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 4: Profile & Bio Editor */}
+      {/* TAB 4: Profile Editor */}
       {activeTab === 'profile' && (
-        <form
-          onSubmit={handleSaveProfile}
-          className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-5"
-        >
-          <h2 className="font-display font-bold text-lg text-ink">
-            Profile Information & Narrative
+        <form onSubmit={handleSaveProfile} className="border border-canvas-border p-5 sm:p-7 space-y-5 bg-canvas-surface/20">
+          <h2 className="font-display text-2xl text-ink font-normal">
+            Profile Text & Narrative
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
             <div className="space-y-1">
-              <label className="text-ink-muted">Full Name</label>
+              <label className="text-ink-secondary uppercase">Full Name</label>
               <input
                 type="text"
                 value={profileForm.name}
                 onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-ink-muted">Email Address</label>
+              <label className="text-ink-secondary uppercase">Email</label>
               <input
                 type="email"
                 value={profileForm.email}
                 onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
               />
             </div>
 
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-ink-muted">Hero Headline</label>
+              <label className="text-ink-secondary uppercase">Headline</label>
               <input
                 type="text"
                 value={profileForm.headline}
                 onChange={(e) => setProfileForm({ ...profileForm, headline: e.target.value })}
-                className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
               />
             </div>
 
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-ink-muted">Supporting Statement</label>
+              <label className="text-ink-secondary uppercase">Summary Statement</label>
               <input
                 type="text"
                 value={profileForm.supportingStatement}
                 onChange={(e) => setProfileForm({ ...profileForm, supportingStatement: e.target.value })}
-                className="w-full bg-canvas-muted border border-canvas-border rounded-xl px-3 py-2 text-ink focus:outline-none focus:border-accent"
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none"
               />
             </div>
 
             <div className="space-y-1 sm:col-span-2">
-              <label className="text-ink-muted">About Me Narrative (Separate paragraphs with double enter)</label>
+              <label className="text-ink-secondary uppercase">Bio Paragraphs (Double enter between paragraphs)</label>
               <textarea
                 rows={5}
                 value={profileForm.bio}
                 onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                className="w-full bg-canvas-muted border border-canvas-border rounded-xl p-3 text-ink focus:outline-none focus:border-accent resize-none font-sans text-sm"
+                className="w-full bg-transparent border border-canvas-border p-2 text-ink outline-none font-sans"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="px-5 py-2.5 rounded-xl bg-accent text-black font-semibold text-xs hover:bg-accent-hover transition-colors flex items-center space-x-2"
+            className="px-4 py-2 bg-ink text-canvas hover:bg-accent hover:text-white font-mono text-xs uppercase tracking-wider"
           >
-            <Save className="w-3.5 h-3.5" />
-            <span>Save Profile Updates</span>
+            Save Updates
           </button>
         </form>
       )}
 
-      {/* TAB 5: Projects Manager */}
+      {/* TAB 5: Projects */}
       {activeTab === 'projects' && (
-        <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-display font-bold text-lg text-ink">
-              Projects List ({data.projects.length})
-            </h2>
-          </div>
-
-          <div className="space-y-3">
+        <div className="border border-canvas-border p-5 sm:p-7 space-y-4 bg-canvas-surface/20">
+          <h2 className="font-display text-2xl text-ink font-normal">
+            Projects List ({data.projects.length})
+          </h2>
+          <div className="divide-y divide-canvas-border font-mono text-xs">
             {data.projects.map((proj) => (
-              <div
-                key={proj.id}
-                className="p-4 rounded-xl bg-canvas-muted border border-canvas-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
-              >
+              <div key={proj.id} className="py-4 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
                 <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold text-ink text-sm">{proj.title}</span>
-                    {proj.isFeatured && (
-                      <span className="px-1.5 py-0.5 rounded bg-accent-muted text-accent border border-accent-border font-mono text-[10px]">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-ink-secondary text-xs">{proj.tagline}</div>
-                  <div className="text-ink-muted font-mono text-[11px]">
-                    {proj.technologies.join(', ')}
-                  </div>
+                  <div className="font-display text-lg text-ink font-normal">{proj.title}</div>
+                  <div className="text-xs text-ink-secondary font-sans">{proj.tagline}</div>
+                  <div className="text-[11px] text-ink-secondary">{proj.technologies.join(', ')}</div>
                 </div>
-
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   <button
                     onClick={() => updateProject({ ...proj, isFeatured: !proj.isFeatured })}
-                    className="px-3 py-1.5 rounded-lg bg-canvas-surface text-ink-secondary hover:text-ink border border-canvas-border font-mono text-[11px]"
+                    className="px-2.5 py-1 border border-canvas-border hover:border-ink uppercase text-[11px]"
                   >
-                    {proj.isFeatured ? 'Unfeature' : 'Mark Featured'}
+                    {proj.isFeatured ? 'Unfeature' : 'Feature'}
                   </button>
                   <a
                     href={proj.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 rounded-lg bg-canvas-surface text-ink hover:text-accent border border-canvas-border"
+                    className="editorial-link uppercase text-[11px] text-ink"
                   >
-                    <Github className="w-3.5 h-3.5" />
+                    Repo &nearr;
                   </a>
                 </div>
               </div>
@@ -1026,27 +810,24 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 6: Skills & Stack */}
+      {/* TAB 6: Skills */}
       {activeTab === 'skills' && (
-        <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
-          <h2 className="font-display font-bold text-lg text-ink">
+        <div className="border border-canvas-border p-5 sm:p-7 space-y-4 bg-canvas-surface/20">
+          <h2 className="font-display text-2xl text-ink font-normal">
             Skills Inventory ({data.skills.length})
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 font-mono text-xs">
             {data.skills.map((skill) => (
-              <div
-                key={skill.id}
-                className="p-3 rounded-lg bg-canvas-muted border border-canvas-border flex items-center justify-between text-xs"
-              >
+              <div key={skill.id} className="p-3 border border-canvas-border flex items-center justify-between">
                 <div>
-                  <div className="font-semibold text-ink">{skill.name}</div>
-                  <div className="text-[10px] font-mono text-ink-muted">{skill.category}</div>
+                  <div className="text-ink font-medium">{skill.name}</div>
+                  <div className="text-[10px] text-ink-secondary uppercase">{skill.category}</div>
                 </div>
                 <button
                   onClick={() => deleteSkill(skill.id)}
-                  className="text-ink-muted hover:text-red-400 p-1"
+                  className="text-accent hover:underline text-[10px] uppercase"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete
                 </button>
               </div>
             ))}

@@ -1,22 +1,5 @@
 import React from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import {
-  FileText,
-  Printer,
-  X,
-  ExternalLink,
-  Mail,
-  Phone,
-  Github,
-  Linkedin,
-  Code2,
-  GraduationCap,
-  Briefcase,
-  CheckCircle2,
-  Award,
-  Layers,
-  Sparkles
-} from 'lucide-react';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -33,121 +16,99 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/70 overflow-y-auto">
       {/* Modal Container */}
-      <div className="bg-canvas-subtle border border-canvas-border max-w-4xl w-full rounded-2xl shadow-2xl my-6 flex flex-col max-h-[92vh] overflow-hidden">
+      <div className="bg-canvas border border-canvas-border max-w-4xl w-full shadow-2xl my-6 flex flex-col max-h-[92vh] overflow-hidden text-left">
         
-        {/* Modal Top Bar */}
-        <div className="p-4 sm:px-6 bg-canvas-muted border-b border-canvas-border flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center space-x-2.5">
-            <div className="p-1.5 rounded-lg bg-accent/10 border border-accent-border text-accent">
-              <FileText className="w-4 h-4" />
+        {/* Top Control Bar */}
+        <div className="p-4 sm:px-6 bg-canvas-surface border-b border-canvas-border flex items-center justify-between flex-shrink-0">
+          <div>
+            <div className="font-display text-lg text-ink font-normal">
+              {data.profile.name} &mdash; Official Resume
             </div>
-            <div>
-              <h2 className="font-display font-bold text-sm sm:text-base text-ink flex items-center gap-2">
-                <span>{data.profile.name} — Verified e-Resume</span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-semibold uppercase">
-                  SRMIST CSE
-                </span>
-              </h2>
-              <span className="text-[11px] font-mono text-ink-muted">
-                Official Engineering Format • Current CGPA: 8.60/10.00
-              </span>
+            <div className="font-mono text-[11px] text-ink-secondary uppercase tracking-wider">
+              SRMIST B.Tech CSE &bull; CGPA 8.60 / 10.00
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3 font-mono text-xs">
             <button
               onClick={handlePrint}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-accent text-black font-semibold text-xs hover:bg-accent-hover transition-colors"
+              className="px-3.5 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white transition-colors uppercase tracking-wider"
             >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print / Save as PDF</span>
+              Print / Save PDF
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl text-ink-muted hover:text-ink hover:bg-canvas-surface transition-colors border border-transparent hover:border-canvas-border"
+              className="px-2.5 py-1.5 border border-canvas-border hover:border-ink text-ink-secondary hover:text-ink uppercase tracking-wider"
               aria-label="Close modal"
             >
-              <X className="w-5 h-5" />
+              Close [x]
             </button>
           </div>
         </div>
 
         {/* Scrollable Printable Document Container */}
-        <div className="p-4 sm:p-8 overflow-y-auto space-y-6 text-left font-sans bg-canvas text-ink text-xs sm:text-sm selection:bg-accent selection:text-black">
+        <div className="p-6 sm:p-10 overflow-y-auto space-y-7 bg-canvas text-ink text-xs sm:text-sm font-sans">
           
-          {/* Document Header */}
-          <div className="text-center space-y-2 border-b border-canvas-border pb-5">
-            <h1 className="text-2xl sm:text-3xl font-display font-extrabold uppercase tracking-wide text-ink">
+          {/* Header */}
+          <div className="text-center space-y-2 border-b border-canvas-border pb-6">
+            <h1 className="text-3xl sm:text-4xl font-display font-normal uppercase tracking-wider text-ink">
               {data.profile.name}
             </h1>
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] sm:text-xs font-mono text-ink-secondary">
-              {data.profile.phone && (
-                <a href={`tel:${data.profile.phone}`} className="hover:text-accent flex items-center gap-1">
-                  <Phone className="w-3 h-3 text-accent" />
-                  <span>{data.profile.phone}</span>
-                </a>
-              )}
-              <span>•</span>
-              <a href={`mailto:${data.profile.email}`} className="hover:text-accent flex items-center gap-1">
-                <Mail className="w-3 h-3 text-accent" />
-                <span>{data.profile.email}</span>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-mono text-xs text-ink-secondary">
+              {data.profile.phone && <span>{data.profile.phone}</span>}
+              <span>&bull;</span>
+              <a href={`mailto:${data.profile.email}`} className="text-ink hover:text-accent">
+                {data.profile.email}
               </a>
-              <span>•</span>
+              <span>&bull;</span>
               <a
                 href={`https://www.linkedin.com/in/${data.profile.linkedinSlug}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-accent flex items-center gap-1"
+                className="text-ink hover:text-accent"
               >
-                <Linkedin className="w-3 h-3 text-accent" />
-                <span>linkedin.com/in/{data.profile.linkedinSlug}</span>
+                linkedin.com/in/{data.profile.linkedinSlug}
               </a>
-              <span>•</span>
+              <span>&bull;</span>
               <a
                 href={`https://github.com/${data.profile.githubUsername}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-accent flex items-center gap-1"
+                className="text-ink hover:text-accent"
               >
-                <Github className="w-3 h-3 text-accent" />
-                <span>github.com/{data.profile.githubUsername}</span>
+                github.com/{data.profile.githubUsername}
               </a>
-              {data.profile.leetcodeUrl && (
-                <>
-                  <span>•</span>
-                  <a
-                    href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-accent flex items-center gap-1 text-accent font-semibold"
-                  >
-                    <Code2 className="w-3 h-3" />
-                    <span>leetcode.com/u/{data.profile.leetcodeUsername || 'vaish_phob'}</span>
-                  </a>
-                </>
-              )}
+              <span>&bull;</span>
+              <a
+                href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink hover:text-accent"
+              >
+                leetcode.com/u/{data.profile.leetcodeUsername || 'vaish_phob'}
+              </a>
             </div>
           </div>
 
           {/* 1. EDUCATION */}
           <div className="space-y-2">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-accent font-bold border-b border-canvas-border pb-1">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-accent pb-1 border-b border-canvas-border font-semibold">
               Education
             </h2>
             {data.education.map((edu) => (
-              <div key={edu.id} className="space-y-1">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink">
-                  <span>{edu.institution}</span>
-                  <span className="font-mono text-xs text-ink-muted">{edu.location}</span>
+              <div key={edu.id} className="space-y-1 text-xs sm:text-sm">
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-ink">
+                  <span className="font-display text-lg">{edu.institution}</span>
+                  <span className="font-mono text-xs text-ink-secondary">{edu.location}</span>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between italic text-ink-secondary text-xs">
-                  <span>{edu.degree} – <strong className="text-accent not-italic font-mono">CGPA: {edu.cgpa || '8.60/10.00'}</strong></span>
-                  <span className="font-mono not-italic text-ink-muted">{edu.startYear} – {edu.endYear}</span>
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between italic text-ink-secondary">
+                  <span>{edu.degree} &mdash; <strong className="not-italic font-mono text-ink">CGPA: {edu.cgpa || '8.60 / 10.00'}</strong></span>
+                  <span className="font-mono not-italic text-xs text-ink-secondary">{edu.startYear} &mdash; {edu.endYear}</span>
                 </div>
-                <div className="text-[11px] text-ink-muted pt-1">
-                  <strong>Relevant Coursework:</strong> Data Structures & Algorithms, Object-Oriented Programming, DBMS, Operating Systems, Computer Networks, System Design, RESTful API Engineering.
+                <div className="text-xs text-ink-secondary pt-1 font-mono">
+                  <strong className="text-ink">Relevant Coursework:</strong> Data Structures & Algorithms, Object-Oriented Programming, DBMS, Operating Systems, Computer Networks, System Design, RESTful API Engineering.
                 </div>
               </div>
             ))}
@@ -155,10 +116,10 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
 
           {/* 2. TECHNICAL SKILLS */}
           <div className="space-y-2">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-accent font-bold border-b border-canvas-border pb-1">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-accent pb-1 border-b border-canvas-border font-semibold">
               Technical Skills
             </h2>
-            <div className="space-y-1 text-xs text-ink-secondary leading-relaxed">
+            <div className="space-y-1.5 text-xs text-ink-secondary leading-relaxed font-mono">
               <div>
                 <strong className="text-ink">Languages:</strong> Java, Python, C++, C, JavaScript (ES6+), TypeScript, SQL
               </div>
@@ -169,7 +130,7 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
                 <strong className="text-ink">Databases & Caching:</strong> PostgreSQL, MySQL, Redis, Prisma ORM
               </div>
               <div>
-                <strong className="text-ink">Developer Tools & DevOps:</strong> Git, GitHub, Postman, Docker, Containerization, Uvicorn, Jupyter Notebook
+                <strong className="text-ink">Developer Tools:</strong> Git, GitHub, Postman, Docker, Containerization, Uvicorn, Jupyter Notebook
               </div>
               <div>
                 <strong className="text-ink">Machine Learning & Data:</strong> Scikit-Learn, NumPy, Pandas, Whoosh (Information Retrieval)
@@ -182,149 +143,122 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
 
           {/* 3. PROJECTS */}
           <div className="space-y-4">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-accent font-bold border-b border-canvas-border pb-1">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-accent pb-1 border-b border-canvas-border font-semibold">
               Engineering Projects
             </h2>
 
-            {/* Reqruit IQ (Ongoing with Research Paper) */}
+            {/* Online Examination System */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span className="flex items-center gap-1.5">
-                  <span>Reqruit IQ – AI-Powered Talent Intelligence Platform</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-accent-muted text-accent border border-accent-border font-normal">
-                    Ongoing Research Paper
-                  </span>
-                </span>
-                <span className="font-mono text-xs text-ink-muted font-normal">
-                  Python, FastAPI, Scikit-learn, React.js, PostgreSQL
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">Online Examination System with AI Proctoring</span>
+                <span className="font-mono text-xs text-ink-secondary">FastAPI, YOLOv8, MediaPipe, Spring Boot/Node, MySQL</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Authoring an active research paper entitled <em>"Algorithmic Fairness and Semantic Relevance in Automated Candidate Resume Retrieval"</em>.</li>
-                <li>Architecting end-to-end candidate screening pipelines scoring domain competencies with vector similarity search.</li>
-                <li>Constructing asynchronous FastAPI microservices to evaluate multi-format resumes with sub-second latency.</li>
+              <ul className="list-disc list-inside space-y-1 text-xs text-ink-secondary">
+                <li>Developed a secure assessment platform executing automated evaluation and timer-controlled state handling.</li>
+                <li>Engineered dedicated FastAPI computer-vision pipeline running YOLOv8 object detection and MediaPipe face & hand landmarkers for proctoring.</li>
+                <li>Optimized relational schema and index structures in MySQL to handle 500+ concurrent examination submissions with zero data loss.</li>
               </ul>
             </div>
 
             {/* InsightU */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>InsightU – Smart Academic Collaboration Platform</span>
-                <span className="font-mono text-xs text-ink-muted font-normal">
-                  React.js, TypeScript, FastAPI, Redis, PostgreSQL
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">InsightU &mdash; Smart Academic Collaboration Platform</span>
+                <span className="font-mono text-xs text-ink-secondary">React.js, TypeScript, FastAPI, Redis, PostgreSQL</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Engineered a high-concurrency academic collaboration platform featuring real-time state synchronization, handling <strong>1,000+ concurrent simulated requests</strong>.</li>
-                <li>Integrated <strong>Redis caching layer</strong> for hot database queries, achieving a <strong>40% reduction in average API latency</strong> under load.</li>
+              <ul className="list-disc list-inside space-y-1 text-xs text-ink-secondary">
+                <li>Engineered a high-concurrency academic collaboration platform featuring real-time state synchronization, handling 1,000+ concurrent simulated requests.</li>
+                <li>Integrated Redis caching layer for hot database queries, achieving a 40% reduction in average API latency under load.</li>
                 <li>Implemented secure authentication architecture using JWT with Role-Based Access Control (RBAC) across student and faculty access routes.</li>
-                <li>Designed dynamic collaborative tools including live canvas synchronization, automated quiz generation, and responsive schedule management.</li>
               </ul>
             </div>
 
             {/* Datara / ChronoSearch */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>Datara (ChronoSearch) – Time-Aware Information Retrieval System</span>
-                <span className="font-mono text-xs text-ink-muted font-normal">
-                  Python, FastAPI, Whoosh Engine, PostgreSQL
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">Datara (ChronoSearch) &mdash; Time-Aware Information Retrieval System</span>
+                <span className="font-mono text-xs text-ink-secondary">Python, FastAPI, Whoosh Engine, PostgreSQL</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Architected a scalable full-text and semantic information retrieval engine utilizing the <strong>Whoosh indexing engine</strong> for dynamic CSV ingestion.</li>
-                <li>Optimized multi-field inverted index queries, <strong>accelerating structured dataset search speeds by 30% across 100k+ records</strong>.</li>
-                <li>Developed asynchronous RESTful endpoints via FastAPI for real-time document parsing, dynamic metadata extraction, and indexing.</li>
+              <ul className="list-disc list-inside space-y-1 text-xs text-ink-secondary">
+                <li>Architected scalable full-text and semantic information retrieval engine utilizing the Whoosh indexing engine for dynamic CSV ingestion.</li>
+                <li>Optimized multi-field inverted index queries, accelerating structured dataset search speeds by 30% across 100k+ records.</li>
               </ul>
             </div>
 
             {/* Adaptive Study Twin */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>Adaptive Study Twin – AI-Driven Personalization Engine</span>
-                <span className="font-mono text-xs text-ink-muted font-normal">
-                  Python, FastAPI, Scikit-learn, React.js
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">Adaptive Study Twin &mdash; AI-Driven Personalization Engine</span>
+                <span className="font-mono text-xs text-ink-secondary">Python, FastAPI, Scikit-learn, React.js</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Built an AI-assisted adaptive learning platform that dynamically tailors evaluation difficulty and content pathways based on historical performance metrics.</li>
-                <li>Engineered diagnostic assessment algorithms using <strong>Scikit-learn that identify learner weakness vectors with 88% classification accuracy</strong>.</li>
-                <li>Structured modular REST services in FastAPI to support future integration of vector embeddings and LLM inference pipelines.</li>
+              <ul className="list-disc list-inside space-y-1 text-xs text-ink-secondary">
+                <li>Built an AI-assisted adaptive learning platform that dynamically tailors evaluation difficulty based on performance metrics.</li>
+                <li>Engineered diagnostic assessment algorithms using Scikit-learn identifying learner weakness vectors with 88% classification accuracy.</li>
               </ul>
             </div>
 
-            {/* Online Examination System */}
+            {/* Reqruit IQ */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>Online Examination System</span>
-                <span className="font-mono text-xs text-ink-muted font-normal">
-                  Spring Boot, React.js, MySQL, JWT
-                </span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">Reqruit IQ &mdash; AI Talent Intelligence Platform [Ongoing Paper]</span>
+                <span className="font-mono text-xs text-ink-secondary">Python, FastAPI, Scikit-learn, React.js, PostgreSQL</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Developed a secure assessment platform executing automated evaluation and timer-controlled state handling for online testing.</li>
-                <li>Optimized relational schema and index structures in MySQL to handle <strong>500+ concurrent examination submissions with zero data loss</strong>.</li>
+              <ul className="list-disc list-inside space-y-1 text-xs text-ink-secondary">
+                <li>Authoring active research paper: <em>"Algorithmic Fairness and Semantic Relevance in Automated Candidate Resume Retrieval"</em>.</li>
+                <li>Architecting semantic candidate scoring pipelines utilizing vector similarity and FastAPI asynchronous endpoints.</li>
               </ul>
             </div>
           </div>
 
-          {/* 4. EXPERIENCE & INTERNSHIPS */}
+          {/* 4. EXPERIENCE */}
           <div className="space-y-3">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-accent font-bold border-b border-canvas-border pb-1">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-accent pb-1 border-b border-canvas-border font-semibold">
               Experience & Internships
             </h2>
 
-            {/* Unified Mentor (Ongoing Internship) */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>Unified Mentor – Software Engineer / AI-ML Intern</span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">Unified Mentor &mdash; Software Engineer / AI-ML Intern</span>
                 <span className="font-mono text-xs text-accent">Ongoing (3 Months Online Internship)</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Undergoing intensive 3-month online engineering internship specializing in real-world software development and applied machine learning deliverables.</li>
-                <li>Developing modular full-stack and predictive features adhering to production design standards.</li>
-              </ul>
+              <p className="text-xs text-ink-secondary">
+                Undergoing 3-month online engineering internship developing modular full-stack and predictive machine learning components.
+              </p>
             </div>
 
-            {/* C-DAC MEPZ */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>C-DAC MEPZ – Artificial Intelligence & Machine Learning Trainee</span>
-                <span className="font-mono text-xs text-ink-muted">Jul. 2026 – Present | Chennai, India</span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">C-DAC MEPZ &mdash; Artificial Intelligence & Machine Learning Trainee</span>
+                <span className="font-mono text-xs text-ink-secondary">Jul. 2026 &mdash; Present | Chennai, India</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Engineered end-to-end predictive pipelines using Scikit-learn, Pandas, and NumPy across an intensive <strong>400-hour industry specialization program</strong>.</li>
+              <ul className="list-disc list-inside space-y-1 text-xs text-ink-secondary">
+                <li>Engineered end-to-end predictive pipelines using Scikit-learn, Pandas, and NumPy across an intensive 400-hour industry specialization.</li>
                 <li>Executed data preprocessing, feature selection, and model evaluation techniques on real-world structured datasets.</li>
-                <li>Collaborated in agile software delivery workflows, adhering to modular programming standards and peer code reviews.</li>
               </ul>
             </div>
 
-            {/* Aaruush SRMIST */}
             <div className="space-y-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between font-semibold text-ink text-xs sm:text-sm">
-                <span>Aaruush, SRM Institute of Science and Technology – PPCH, Quality Assurance</span>
-                <span className="font-mono text-xs text-ink-muted">May 2026 – Present | Chennai, India</span>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between font-normal text-xs sm:text-sm">
+                <span className="font-display text-base text-ink">Aaruush, SRMIST &mdash; PPCH, Quality Assurance</span>
+                <span className="font-mono text-xs text-ink-secondary">May 2026 &mdash; Present | Chennai, India</span>
               </div>
-              <ul className="list-disc list-inside space-y-1 text-[11px] sm:text-xs text-ink-secondary">
-                <li>Directed cross-functional execution teams across multi-tier technical and educational events, managing operations for <strong>500+ participants</strong>.</li>
-                <li>Coordinated stakeholder communication between university administration, event heads, and student teams to ensure smooth event delivery.</li>
-              </ul>
+              <p className="text-xs text-ink-secondary">
+                Directed cross-functional execution teams across multi-tier technical and educational events managing operations for 500+ participants.
+              </p>
             </div>
           </div>
 
           {/* 5. CERTIFICATIONS & COMPETENCIES */}
           <div className="space-y-2">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-accent font-bold border-b border-canvas-border pb-1">
-              Certifications & Competencies
+            <h2 className="font-mono text-xs uppercase tracking-widest text-accent pb-1 border-b border-canvas-border font-semibold">
+              Certifications & Problem Solving
             </h2>
-            <div className="space-y-1 text-xs text-ink-secondary">
+            <div className="space-y-1.5 text-xs text-ink-secondary font-mono">
               <div>
-                <strong className="text-ink">Certifications:</strong> C-DAC AI/ML (400-Hour Advanced Specialization — <span className="text-accent font-semibold">Ongoing</span>), NPTEL Programming in Java, SRMIST Advanced Java & DSA in C.
+                <strong className="text-ink">Certifications:</strong> C-DAC AI/ML (400-Hour Advanced Specialization &mdash; <span className="text-accent font-semibold">Ongoing</span>), NPTEL Programming in Java, SRMIST Advanced Java & DSA in C.
               </div>
               <div>
-                <strong className="text-ink">Problem Solving:</strong> Active algorithmic problem solving across platforms including LeetCode, focusing on Data Structures, Algorithms, and Dynamic Programming.
-              </div>
-              <div>
-                <strong className="text-ink">Languages:</strong> English (Professional), Hindi (Native).
+                <strong className="text-ink">Problem Solving:</strong> Active algorithmic practice on LeetCode (@vaish_phob, 30 solved: 20 Easy, 10 Medium, verified in C and Java).
               </div>
             </div>
           </div>
@@ -332,18 +266,18 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
         </div>
 
         {/* Modal Bottom Footer */}
-        <div className="p-4 bg-canvas-muted border-t border-canvas-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-ink-muted">
-          <span>Verified against Vaishnavi Singh's Official Academic & Repository Record</span>
+        <div className="p-4 bg-canvas-surface border-t border-canvas-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-ink-secondary">
+          <span>Verified against official academic and repository record</span>
           <div className="flex items-center gap-3">
             <button
               onClick={handlePrint}
-              className="px-4 py-2 rounded-xl bg-accent text-black font-semibold hover:bg-accent-hover transition-colors"
+              className="px-4 py-1.5 bg-ink text-canvas hover:bg-accent hover:text-white uppercase tracking-wider transition-colors"
             >
               Print / Save PDF
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-canvas-surface text-ink hover:text-accent transition-colors"
+              className="px-3 py-1.5 border border-canvas-border hover:border-ink uppercase tracking-wider transition-colors"
             >
               Close
             </button>
