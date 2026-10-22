@@ -26,16 +26,23 @@ interface PortfolioContextType {
   resetToVerifiedInitial: () => void;
 }
 
-const STORAGE_KEY = 'vaishnavi_portfolio_data_v1';
+const STORAGE_KEY = 'vaishnavi_portfolio_data_v2';
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
 
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data, setData] = useState<PortfolioData>(() => {
+    try {
+      localStorage.removeItem('vaishnavi_portfolio_data_v1');
+    } catch (e) {}
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (parsed.profile) {
+          parsed.profile.email = 'vaishnavi1657@gmail.com';
+        }
+        return parsed;
       } catch (e) {
         console.error('Failed to parse cached portfolio data:', e);
       }
@@ -56,6 +63,9 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         if (res.ok) {
           const json = await res.json();
           if (json.data) {
+            if (json.data.profile) {
+              json.data.profile.email = 'vaishnavi1657@gmail.com';
+            }
             setData(json.data);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(json.data));
           }

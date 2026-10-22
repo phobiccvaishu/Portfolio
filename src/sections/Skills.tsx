@@ -45,14 +45,14 @@ export const Skills: React.FC = () => {
 
                 <ul className="space-y-1.5 text-sm text-ink-secondary leading-relaxed font-sans">
                   {skillsInCategory.map((skill) => (
-                    <li key={skill.id} className="flex items-baseline justify-between py-1">
+                    <li key={skill.id} className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between py-1.5 border-b border-canvas-border/40 last:border-b-0 gap-0.5 sm:gap-3">
                       <span className="text-ink font-normal">{skill.name}</span>
                       {skill.evidenceRepo ? (
-                        <span className="font-mono text-[11px] text-ink-secondary truncate max-w-[140px] text-right pl-2">
+                        <span className="font-mono text-[11px] text-ink-secondary sm:text-right">
                           {skill.evidenceRepo}
                         </span>
                       ) : (
-                        <span className="font-mono text-[10px] text-ink-secondary uppercase">
+                        <span className="font-mono text-[10px] text-ink-secondary uppercase sm:text-right">
                           {skill.proficiency || 'Verified'}
                         </span>
                       )}

@@ -6,7 +6,7 @@ describe('Portfolio Verified e-Resume & Project Integrity', () => {
   it('contains authentic profile details from e-resume', () => {
     expect(initialPortfolioData.profile.name).toBe('Vaishnavi');
     expect(initialPortfolioData.profile.githubUsername).toBe('phobiccvaishu');
-    expect(initialPortfolioData.profile.email).toBe('Vaishnavi1657@gmail.com');
+    expect(initialPortfolioData.profile.email).toBe('vaishnavi1657@gmail.com');
     expect(initialPortfolioData.profile.phone).toBe('+91-7209905770');
     expect(initialPortfolioData.profile.cgpa).toBe('8.60 / 10.00');
   });
@@ -50,6 +50,33 @@ describe('Portfolio Verified e-Resume & Project Integrity', () => {
     expect(initialPortfolioData.profile.leetcodeStats?.totalSolved).toBe(30);
     expect(initialPortfolioData.profile.leetcodeStats?.easySolved).toBe(20);
     expect(initialPortfolioData.profile.leetcodeStats?.mediumSolved).toBe(10);
+  });
+
+  it('contains the exact user-specified technical skills inventory', () => {
+    const skillNames = initialPortfolioData.skills.map(s => s.name);
+    expect(skillNames).toHaveLength(20);
+    expect(skillNames).toEqual([
+      'Java',
+      'Python',
+      'C++',
+      'C',
+      'SQL',
+      'Scikit-Learn',
+      'NumPy & Pandas',
+      'Whoosh (Information Retrieval)',
+      'Predictive Pipelines',
+      'Computer Vision & MediaPipe',
+      'FastAPI',
+      'Node.js & Express',
+      'RESTful API Engineering',
+      'MySQL',
+      'React.js',
+      'HTML5 & CSS3',
+      'Tailwind CSS',
+      'Git & GitHub',
+      'Uvicorn',
+      'Jupyter Notebook'
+    ]);
   });
 
   it('validates contact form schema with Zod', () => {

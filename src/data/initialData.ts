@@ -12,7 +12,7 @@ export const initialPortfolioData: PortfolioData = {
       "Currently undergoing an intensive 400-hour C-DAC AI/ML specialization, researching automated talent intelligence algorithms for the Reqruit IQ research paper, and interning at Unified Mentor."
     ],
     location: "Chennai, TN, India",
-    email: "Vaishnavi1657@gmail.com",
+    email: "vaishnavi1657@gmail.com",
     phone: "+91-7209905770",
     avatarUrl: "https://avatars.githubusercontent.com/u/165480899?v=4",
     githubUsername: "phobiccvaishu",
@@ -62,40 +62,28 @@ export const initialPortfolioData: PortfolioData = {
     { id: 'sk-2', name: 'Python', category: 'Languages', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ / ChronoSearch / Adaptive Study Twin', isHighlighted: true },
     { id: 'sk-3', name: 'C++', category: 'Languages', proficiency: 'Intermediate', source: 'profile-listed', isHighlighted: false },
     { id: 'sk-4', name: 'C', category: 'Languages', proficiency: 'Intermediate', source: 'profile-listed', isHighlighted: false },
-    { id: 'sk-5', name: 'JavaScript (ES6+)', category: 'Languages', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU / Adaptive Study Twin', isHighlighted: true },
-    { id: 'sk-6', name: 'TypeScript', category: 'Languages', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'InsightU', isHighlighted: true },
-    { id: 'sk-7', name: 'SQL', category: 'Languages', proficiency: 'Advanced', source: 'profile-listed', isHighlighted: true },
+    { id: 'sk-5', name: 'SQL', category: 'Languages', proficiency: 'Advanced', source: 'profile-listed', isHighlighted: true },
 
-    // AI & Machine Learning & Data
-    { id: 'sk-8', name: 'Scikit-Learn', category: 'AI / Machine Learning', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ / Adaptive Study Twin', isHighlighted: true },
-    { id: 'sk-9', name: 'NumPy & Pandas', category: 'AI / Machine Learning', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ / ChronoSearch', isHighlighted: true },
-    { id: 'sk-10', name: 'Whoosh (Information Retrieval)', category: 'AI / Machine Learning', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'Datara (ChronoSearch)', isHighlighted: true },
-    { id: 'sk-11', name: 'Predictive Pipelines', category: 'AI / Machine Learning', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ Specialization', isHighlighted: true },
-    { id: 'sk-12', name: 'Computer Vision & MediaPipe', category: 'AI / Machine Learning', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'Online Examination System', isHighlighted: false },
+    // AI / Machine Learning
+    { id: 'sk-6', name: 'Scikit-Learn', category: 'AI / Machine Learning', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ / Adaptive Study Twin', isHighlighted: true },
+    { id: 'sk-7', name: 'NumPy & Pandas', category: 'AI / Machine Learning', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ / ChronoSearch', isHighlighted: true },
+    { id: 'sk-8', name: 'Whoosh (Information Retrieval)', category: 'AI / Machine Learning', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'Datara (ChronoSearch)', isHighlighted: true },
+    { id: 'sk-9', name: 'Predictive Pipelines', category: 'AI / Machine Learning', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'C-DAC MEPZ Specialization', isHighlighted: true },
+    { id: 'sk-10', name: 'Computer Vision & MediaPipe', category: 'AI / Machine Learning', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'Online Examination System', isHighlighted: true },
 
-    // Backend & Systems & Frameworks
-    { id: 'sk-13', name: 'FastAPI', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'ChronoSearch / Reqruit IQ / Adaptive Study Twin', isHighlighted: true },
-    { id: 'sk-14', name: 'Spring Boot', category: 'Backend & Systems', proficiency: 'Intermediate', source: 'profile-listed', evidenceRepo: 'Online Examination System', isHighlighted: true },
-    { id: 'sk-15', name: 'Node.js & Express', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU', isHighlighted: true },
-    { id: 'sk-16', name: 'RESTful API Engineering', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'Multi-repo', isHighlighted: true },
-    { id: 'sk-17', name: 'JWT & RBAC Architecture', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU / Online Exam', isHighlighted: false },
+    // Backend, Web & Databases
+    { id: 'sk-11', name: 'FastAPI', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'ChronoSearch / Reqruit IQ', isHighlighted: true },
+    { id: 'sk-12', name: 'Node.js & Express', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU', isHighlighted: true },
+    { id: 'sk-13', name: 'RESTful API Engineering', category: 'Backend & Systems', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'Multi-repo', isHighlighted: true },
+    { id: 'sk-14', name: 'MySQL', category: 'Databases & Cache', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'Online Examination System', isHighlighted: true },
+    { id: 'sk-15', name: 'React.js', category: 'Frontend & Web', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU / Adaptive Study Twin', isHighlighted: true },
+    { id: 'sk-16', name: 'HTML5 & CSS3', category: 'Frontend & Web', proficiency: 'Advanced', source: 'profile-listed', isHighlighted: false },
+    { id: 'sk-17', name: 'Tailwind CSS', category: 'Frontend & Web', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'Adaptive Study Twin', isHighlighted: true },
 
-    // Frontend & Web
-    { id: 'sk-18', name: 'React.js', category: 'Frontend & Web', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU / Adaptive Study Twin', isHighlighted: true },
-    { id: 'sk-19', name: 'HTML5 & CSS3', category: 'Frontend & Web', proficiency: 'Advanced', source: 'profile-listed', isHighlighted: false },
-    { id: 'sk-20', name: 'Tailwind CSS', category: 'Frontend & Web', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'Adaptive Study Twin', isHighlighted: true },
-
-    // Databases & Cache
-    { id: 'sk-21', name: 'PostgreSQL', category: 'Databases & Cache', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'InsightU / Datara', isHighlighted: true },
-    { id: 'sk-22', name: 'Redis (Hot Caching)', category: 'Databases & Cache', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'InsightU (40% Latency Reduction)', isHighlighted: true },
-    { id: 'sk-23', name: 'MySQL', category: 'Databases & Cache', proficiency: 'Advanced', source: 'verified-repo', evidenceRepo: 'Online Examination System', isHighlighted: false },
-    { id: 'sk-24', name: 'Prisma ORM', category: 'Databases & Cache', proficiency: 'Intermediate', source: 'verified-repo', evidenceRepo: 'InsightU', isHighlighted: false },
-
-    // Developer Tools & DevOps & Concepts
-    { id: 'sk-25', name: 'Git & GitHub', category: 'Tools & DevOps', proficiency: 'Advanced', source: 'profile-listed', isHighlighted: true },
-    { id: 'sk-26', name: 'Docker & Containerization', category: 'Tools & DevOps', proficiency: 'Intermediate', source: 'profile-listed', isHighlighted: true },
-    { id: 'sk-27', name: 'Postman & Uvicorn', category: 'Tools & DevOps', proficiency: 'Advanced', source: 'verified-repo', isHighlighted: false },
-    { id: 'sk-28', name: 'Jupyter Notebook', category: 'Tools & DevOps', proficiency: 'Advanced', source: 'verified-repo', isHighlighted: false }
+    // Tools & DevOps
+    { id: 'sk-18', name: 'Git & GitHub', category: 'Tools & DevOps', proficiency: 'Advanced', source: 'profile-listed', isHighlighted: true },
+    { id: 'sk-19', name: 'Uvicorn', category: 'Tools & DevOps', proficiency: 'Advanced', source: 'verified-repo', isHighlighted: true },
+    { id: 'sk-20', name: 'Jupyter Notebook', category: 'Tools & DevOps', proficiency: 'Advanced', source: 'verified-repo', isHighlighted: false }
   ],
   projects: [
     {
@@ -317,7 +305,7 @@ export const initialPortfolioData: PortfolioData = {
     { platform: 'github', url: 'https://github.com/phobiccvaishu', label: 'github.com/phobiccvaishu', verified: true },
     { platform: 'linkedin', url: 'https://www.linkedin.com/in/vaishnavi-singh-076aba343', label: 'linkedin.com/in/vaishnavi-singh-076aba343', verified: true },
     { platform: 'leetcode', url: 'https://leetcode.com/u/vaish_phob/', label: 'leetcode.com/u/vaish_phob', verified: true },
-    { platform: 'email', url: 'mailto:Vaishnavi1657@gmail.com', label: 'Vaishnavi1657@gmail.com', verified: true },
+    { platform: 'email', url: 'mailto:vaishnavi1657@gmail.com', label: 'vaishnavi1657@gmail.com', verified: true },
     { platform: 'phone', url: 'tel:+917209905770', label: '+91-7209905770', verified: true }
   ],
   dataSources: [
