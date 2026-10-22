@@ -256,7 +256,11 @@ function loadPortfolio() {
 
 // Helper: save portfolio data
 function savePortfolio(data: any) {
-  fs.writeFileSync(portfolioFile, JSON.stringify(data, null, 2), 'utf-8');
+  try {
+    fs.writeFileSync(portfolioFile, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err: any) {
+    console.warn('[STORAGE] Filesystem write warning (e.g. serverless read-only container):', err.message);
+  }
 }
 
 // ==========================================
@@ -814,8 +818,8 @@ if (fs.existsSync(distDir)) {
   });
 }
 
-// Start listener only when not in test mode
-if (process.env.NODE_ENV !== 'test') {
+// Start listener only when not in test mode or Vercel serverless environment
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`[PORTFOLIO_SERVER] Listening at http://localhost:${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
     console.log(`[SECURITY] Admin authentication active for user: ${ADMIN_USERNAME}`);
