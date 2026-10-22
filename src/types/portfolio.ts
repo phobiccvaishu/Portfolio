@@ -32,12 +32,16 @@ export interface Project {
   githubUrl: string;
   liveUrl?: string;
   verifiedFromGithub: boolean;
-  status: 'Production-ready' | 'Active Development' | 'Prototype / Research';
+  status: 'Production-ready' | 'Active Development' | 'Prototype / Research' | 'Ongoing Research';
   stars?: number;
   forks?: number;
   isFeatured: boolean;
   role?: string;
   demoType?: 'interactive-mock' | 'live-url' | 'code-walkthrough';
+  researchPaper?: {
+    status: 'Ongoing' | 'Under Review' | 'Published';
+    topic: string;
+  };
 }
 
 export interface Experience {
@@ -51,8 +55,9 @@ export interface Experience {
   description: string;
   responsibilities: string[];
   technologies: string[];
-  type: 'internship' | 'leadership' | 'academic' | 'freelance' | 'full-time';
+  type: 'internship' | 'leadership' | 'academic' | 'freelance' | 'full-time' | 'training';
   verified: boolean;
+  badge?: string;
 }
 
 export interface Education {
@@ -64,6 +69,7 @@ export interface Education {
   endYear: string;
   location: string;
   grade?: string;
+  cgpa?: string;
   highlights?: string[];
   verified: boolean;
 }
@@ -84,14 +90,16 @@ export interface Credential {
   expiryDate?: string;
   credentialId?: string;
   verificationUrl?: string;
-  documentUrl?: string; // uploaded PDF or image
+  documentUrl?: string;
   fileName?: string;
   isPublic: boolean;
   verified: boolean;
+  status?: 'completed' | 'ongoing';
+  hours?: string;
 }
 
 export interface SocialLink {
-  platform: 'github' | 'linkedin' | 'email' | 'twitter' | 'website';
+  platform: 'github' | 'linkedin' | 'email' | 'twitter' | 'website' | 'leetcode' | 'phone';
   url: string;
   label: string;
   verified: boolean;
@@ -105,16 +113,21 @@ export interface PersonalProfile {
   bio: string[];
   location: string;
   email: string;
+  phone?: string;
   avatarUrl: string;
   githubUsername: string;
   linkedinSlug: string;
+  leetcodeUrl?: string;
+  cgpa?: string;
   resumeUrl?: string;
   isOpenToOpportunities: boolean;
   targetRoles: string[];
+  problemSolvingCount?: string;
+  spokenLanguages?: string[];
 }
 
 export interface DataSourceStatus {
-  source: 'GitHub API' | 'LinkedIn Public Check' | 'Manual Verified';
+  source: 'GitHub API' | 'LinkedIn Public Check' | 'Manual Verified' | 'Verified e-Resume';
   status: 'Connected' | 'Authentication Required / Authwall' | 'Cached';
   lastSync: string;
   notes: string;

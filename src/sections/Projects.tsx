@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { Project, ProjectCategory } from '../types/portfolio';
-import { Github, ExternalLink, Cpu, Layers, Sparkles, CheckCircle2, ArrowUpRight, Terminal, Eye } from 'lucide-react';
+import { Project } from '../types/portfolio';
+import { Github, ExternalLink, Cpu, Layers, Sparkles, CheckCircle2, ArrowUpRight, Terminal, Eye, BookOpen } from 'lucide-react';
 
 export const Projects: React.FC = () => {
   const { data } = usePortfolio();
@@ -23,13 +23,13 @@ export const Projects: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 text-left">
           <div className="space-y-3">
             <div className="inline-flex items-center space-x-2 text-xs font-mono text-accent uppercase tracking-widest">
-              <span>03 // Portfolio of Work</span>
+              <span>03 // Portfolio & Research</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-ink tracking-tight">
-              Featured Engineering Projects
+              Featured Engineering & Research
             </h2>
             <p className="text-base text-ink-secondary max-w-xl">
-              Authentic systems extracted from my GitHub repositories. Each project includes verified architectures, problem statements, and implementation details.
+              Authentic systems extracted directly from my official resume and GitHub repositories. Includes production architectures, metrics, and active research papers.
             </p>
           </div>
 
@@ -64,12 +64,18 @@ export const Projects: React.FC = () => {
             >
               {/* Card Header & Badges */}
               <div className="p-6 sm:p-7 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-canvas-muted text-accent border border-accent-border font-medium">
                       {project.category}
                     </span>
-                    {project.isFeatured && (
+                    {project.researchPaper && (
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-bold flex items-center gap-1 shadow-sm">
+                        <BookOpen className="w-3 h-3" />
+                        <span>Ongoing Research Paper</span>
+                      </span>
+                    )}
+                    {project.isFeatured && !project.researchPaper && (
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-ink-secondary border border-canvas-border">
                         Featured
                       </span>
@@ -91,6 +97,19 @@ export const Projects: React.FC = () => {
                   </p>
                 </div>
 
+                {/* Research Paper Callout if applicable */}
+                {project.researchPaper && (
+                  <div className="p-3.5 rounded-xl bg-accent-muted border border-accent-border space-y-1">
+                    <div className="flex items-center space-x-1.5 text-xs font-mono font-semibold text-accent">
+                      <BookOpen className="w-3.5 h-3.5" />
+                      <span>Active Research Focus:</span>
+                    </div>
+                    <p className="text-xs text-ink italic leading-relaxed">
+                      "{project.researchPaper.topic}"
+                    </p>
+                  </div>
+                )}
+
                 {/* Description */}
                 <p className="text-sm text-ink-secondary leading-relaxed font-light">
                   {project.description}
@@ -99,10 +118,10 @@ export const Projects: React.FC = () => {
                 {/* Verified Key Features */}
                 <div className="space-y-2 pt-2">
                   <div className="text-xs font-mono text-ink-muted uppercase tracking-wider">
-                    Core Functionality:
+                    Core Accomplishments & Architecture:
                   </div>
                   <ul className="space-y-1.5 text-xs text-ink-secondary">
-                    {project.keyFeatures.slice(0, 3).map((feat, idx) => (
+                    {project.keyFeatures.slice(0, 4).map((feat, idx) => (
                       <li key={idx} className="flex items-start space-x-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-accent mt-0.5 flex-shrink-0" />
                         <span>{feat}</span>
@@ -131,7 +150,7 @@ export const Projects: React.FC = () => {
                   className="inline-flex items-center space-x-1.5 text-xs font-medium text-ink hover:text-accent transition-colors"
                 >
                   <Eye className="w-3.5 h-3.5" />
-                  <span>Inspect Architecture & Specs</span>
+                  <span>Inspect Technical Specs</span>
                 </button>
 
                 <div className="flex items-center space-x-3">
@@ -143,7 +162,7 @@ export const Projects: React.FC = () => {
                       className="inline-flex items-center space-x-1 text-xs font-mono text-ink-secondary hover:text-ink transition-colors"
                     >
                       <Github className="w-3.5 h-3.5" />
-                      <span>Code</span>
+                      <span>Source</span>
                       <ArrowUpRight className="w-3 h-3" />
                     </a>
                   )}
@@ -173,9 +192,16 @@ export const Projects: React.FC = () => {
             
             <div className="flex items-start justify-between border-b border-canvas-border pb-4">
               <div>
-                <span className="text-[10px] font-mono text-accent uppercase tracking-widest px-2 py-0.5 rounded bg-accent-muted border border-accent-border">
-                  {activeProjectModal.category}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono text-accent uppercase tracking-widest px-2 py-0.5 rounded bg-accent-muted border border-accent-border">
+                    {activeProjectModal.category}
+                  </span>
+                  {activeProjectModal.researchPaper && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-bold">
+                      Research Paper In Progress
+                    </span>
+                  )}
+                </div>
                 <h3 className="font-display font-extrabold text-2xl text-ink mt-2">
                   {activeProjectModal.title}
                 </h3>
@@ -208,7 +234,7 @@ export const Projects: React.FC = () => {
             {/* Comprehensive Features List */}
             <div className="space-y-3">
               <h4 className="text-xs font-mono uppercase tracking-wider text-ink-muted">
-                Detailed Feature Specifications:
+                Detailed Specifications & Performance Metrics:
               </h4>
               <ul className="space-y-2 text-sm text-ink-secondary">
                 {activeProjectModal.keyFeatures.map((feat, idx) => (
@@ -250,7 +276,7 @@ export const Projects: React.FC = () => {
               </a>
 
               <div className="text-xs font-mono text-ink-muted">
-                Status: <span className="text-ink">{activeProjectModal.status}</span>
+                Status: <span className="text-ink font-semibold">{activeProjectModal.status}</span>
               </div>
             </div>
 

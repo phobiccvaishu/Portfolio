@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { Credential, CredentialType } from '../types/portfolio';
-import { Award, CheckCircle, ExternalLink, FileText, Plus, ShieldCheck, Eye } from 'lucide-react';
+import { Award, CheckCircle, ExternalLink, FileText, Plus, ShieldCheck, Eye, Clock } from 'lucide-react';
 
 export const Credentials: React.FC = () => {
   const { data, setActiveView } = usePortfolio();
@@ -10,10 +10,9 @@ export const Credentials: React.FC = () => {
 
   const types: { label: string; value: string }[] = [
     { label: 'All Credentials', value: 'All' },
-    { label: 'Course Completions', value: 'course' },
     { label: 'Certifications', value: 'certification' },
-    { label: 'Internships', value: 'internship' },
-    { label: 'Awards', value: 'award' },
+    { label: 'Course Completions', value: 'course' },
+    { label: 'Problem Solving & Awards', value: 'award' },
   ];
 
   const filteredCredentials = data.credentials.filter((c) => {
@@ -30,13 +29,13 @@ export const Credentials: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 text-left">
           <div className="space-y-3">
             <div className="inline-flex items-center space-x-2 text-xs font-mono text-accent uppercase tracking-widest">
-              <span>05 // Credentials & Verification</span>
+              <span>05 // Certifications & Competencies</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-ink tracking-tight">
-              Certifications & Academic Honors
+              Certifications & Technical Honors
             </h2>
             <p className="text-base text-ink-secondary max-w-xl">
-              Authentic certifications, verified course completions, and technical awards with official verification links.
+              Authentic industry specializations, C-DAC intensive AI/ML certification, NPTEL credentials, and verified problem-solving track records.
             </p>
           </div>
 
@@ -71,9 +70,16 @@ export const Credentials: React.FC = () => {
                     <span className="text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-canvas-muted text-accent border border-accent-border">
                       {cred.type}
                     </span>
-                    <span className="text-xs font-mono text-ink-muted">
-                      {cred.issueDate}
-                    </span>
+                    {cred.status === 'ongoing' ? (
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-bold flex items-center gap-1 shadow-sm">
+                        <Clock className="w-3 h-3" />
+                        <span>Ongoing</span>
+                      </span>
+                    ) : (
+                      <span className="text-xs font-mono text-ink-muted">
+                        {cred.issueDate}
+                      </span>
+                    )}
                   </div>
 
                   <h3 className="font-display font-bold text-lg text-ink group-hover:text-accent transition-colors">
@@ -81,8 +87,14 @@ export const Credentials: React.FC = () => {
                   </h3>
 
                   <div className="text-xs text-ink-secondary font-mono">
-                    Issuer: <span className="text-ink">{cred.issuer}</span>
+                    Issuer: <span className="text-ink font-medium">{cred.issuer}</span>
                   </div>
+
+                  {cred.hours && (
+                    <div className="text-[11px] font-mono text-accent bg-canvas-muted p-1.5 rounded-lg border border-canvas-border inline-block">
+                      {cred.hours} Industry Specialization Program
+                    </div>
+                  )}
 
                   {cred.credentialId && (
                     <div className="text-[11px] font-mono text-ink-muted">
@@ -103,7 +115,7 @@ export const Credentials: React.FC = () => {
                   ) : (
                     <div className="inline-flex items-center space-x-1 text-ink-muted font-mono">
                       <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-                      <span>Verified</span>
+                      <span>Verified Record</span>
                     </div>
                   )}
 

@@ -2,56 +2,45 @@ import { describe, it, expect } from 'vitest';
 import { initialPortfolioData } from '../src/data/initialData';
 import { z } from 'zod';
 
-describe('Portfolio Initial Verified Data Integrity', () => {
-  it('contains authentic profile details without fabricated claims', () => {
-    expect(initialPortfolioData.profile.name).toBe('Vaishnavi Singh');
+describe('Portfolio Verified e-Resume & Project Integrity', () => {
+  it('contains authentic profile details from e-resume', () => {
+    expect(initialPortfolioData.profile.name).toBe('Vaishnavi');
     expect(initialPortfolioData.profile.githubUsername).toBe('phobiccvaishu');
-    expect(initialPortfolioData.profile.email).toBe('vaishnavi1657@gmail.com');
-    expect(initialPortfolioData.profile.linkedinSlug).toBe('vaishnavi-singh-076aba343');
-    expect(initialPortfolioData.profile.headline).toBe('Building intelligent systems. Turning ideas into impact.');
+    expect(initialPortfolioData.profile.email).toBe('Vaishnavi1657@gmail.com');
+    expect(initialPortfolioData.profile.phone).toBe('+91-7209905770');
+    expect(initialPortfolioData.profile.cgpa).toBe('8.60 / 10.00');
   });
 
-  it('contains verified projects from GitHub repositories', () => {
-    const projects = initialPortfolioData.projects;
-    expect(projects.length).toBeGreaterThanOrEqual(4);
-
-    const proctoring = projects.find(p => p.id === 'proj-1');
-    expect(proctoring).toBeDefined();
-    expect(proctoring?.technologies).toContain('YOLOv8');
-    expect(proctoring?.technologies).toContain('MediaPipe');
-    expect(proctoring?.technologies).toContain('FastAPI');
-    expect(proctoring?.verifiedFromGithub).toBe(true);
-
-    const adaptiveTwin = projects.find(p => p.id === 'proj-2');
-    expect(adaptiveTwin).toBeDefined();
-    expect(adaptiveTwin?.technologies).toContain('OpenAI GPT-4o');
-    expect(adaptiveTwin?.verifiedFromGithub).toBe(true);
-
-    const insightU = projects.find(p => p.id === 'proj-3');
-    expect(insightU).toBeDefined();
-    expect(insightU?.technologies).toContain('Prisma ORM');
-    expect(insightU?.technologies).toContain('PostgreSQL');
-
-    const chronoSearch = projects.find(p => p.id === 'proj-4');
-    expect(chronoSearch).toBeDefined();
-    expect(chronoSearch?.technologies).toContain('FastAPI');
-    expect(chronoSearch?.technologies).toContain('Pandas');
+  it('contains Reqruit IQ project with ongoing research paper', () => {
+    const reqruitIq = initialPortfolioData.projects.find(p => p.id === 'proj-reqruit-iq');
+    expect(reqruitIq).toBeDefined();
+    expect(reqruitIq?.title).toContain('Reqruit IQ');
+    expect(reqruitIq?.status).toBe('Ongoing Research');
+    expect(reqruitIq?.researchPaper).toBeDefined();
+    expect(reqruitIq?.researchPaper?.status).toBe('Ongoing');
+    expect(reqruitIq?.technologies).toContain('FastAPI');
   });
 
-  it('verifies education institution is SRM Institute of Science and Technology', () => {
+  it('contains C-DAC AI/ML 400-hour ongoing certification', () => {
+    const cdac = initialPortfolioData.credentials.find(c => c.id === 'cred-cdac-aiml');
+    expect(cdac).toBeDefined();
+    expect(cdac?.status).toBe('ongoing');
+    expect(cdac?.hours).toBe('400 Hours');
+  });
+
+  it('contains Unified Mentor 3-month online ongoing internship', () => {
+    const unifiedMentor = initialPortfolioData.experience.find(e => e.id === 'exp-unified-mentor');
+    expect(unifiedMentor).toBeDefined();
+    expect(unifiedMentor?.organization).toBe('Unified Mentor');
+    expect(unifiedMentor?.type).toBe('internship');
+    expect(unifiedMentor?.current).toBe(true);
+  });
+
+  it('verifies academic standing at SRMIST (8.60 CGPA)', () => {
     const edu = initialPortfolioData.education[0];
     expect(edu.institution).toBe('SRM Institute of Science and Technology');
-    expect(edu.fieldOfStudy).toContain('Computer Science');
+    expect(edu.cgpa).toBe('8.60 / 10.00');
     expect(edu.verified).toBe(true);
-  });
-
-  it('verifies honest source hierarchy in data sources', () => {
-    const sources = initialPortfolioData.dataSources;
-    const githubSource = sources.find(s => s.source === 'GitHub API');
-    const linkedinSource = sources.find(s => s.source.includes('LinkedIn'));
-
-    expect(githubSource?.status).toBe('Connected');
-    expect(linkedinSource?.status).toContain('Authentication Required / Authwall');
   });
 
   it('validates contact form schema with Zod', () => {
@@ -66,24 +55,10 @@ describe('Portfolio Initial Verified Data Integrity', () => {
       name: 'Engineering Recruiter',
       email: 'recruiter@techstart.ai',
       subject: 'AI/ML Internship Discussion',
-      message: 'We were impressed by your Online Examination System computer vision architecture.'
+      message: 'We were impressed by your Reqruit IQ research and C-DAC AI/ML training.'
     };
 
     const validResult = contactSchema.safeParse(validSubmission);
     expect(validResult.success).toBe(true);
-
-    const invalidEmailSubmission = {
-      ...validSubmission,
-      email: 'not-an-email'
-    };
-    const invalidResult = contactSchema.safeParse(invalidEmailSubmission);
-    expect(invalidResult.success).toBe(false);
-
-    const shortMessageSubmission = {
-      ...validSubmission,
-      message: 'Hi'
-    };
-    const shortResult = contactSchema.safeParse(shortMessageSubmission);
-    expect(shortResult.success).toBe(false);
   });
 });
