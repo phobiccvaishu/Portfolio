@@ -305,6 +305,17 @@ export const AdminDashboard: React.FC = () => {
         body: formData
       });
 
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        if (res.status === 401) {
+          setAuthStatus('unauthenticated');
+          alert('Administrator session expired. Please log in again.');
+          return;
+        }
+        alert(`Server error (${res.status}): Please ensure the file is under 10MB or try pasting the raw text.`);
+        return;
+      }
+
       const json = await res.json();
       if (res.ok && json.success) {
         setParsedLinkedinData(json.parsed);
@@ -351,9 +362,12 @@ export const AdminDashboard: React.FC = () => {
           credentials: 'include',
           body: formData
         });
-        const json = await res.json();
-        if (res.ok && json.success) {
-          documentUrl = json.file.url;
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const json = await res.json();
+          if (res.ok && json.success) {
+            documentUrl = json.file.url;
+          }
         }
       }
 

@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import pdfParse from 'pdf-parse';
@@ -19,14 +20,19 @@ const __dirname = path.dirname(__filename);
 export const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Ensure directories exist
+// Ensure directories exist safely (support serverless writable /tmp on Vercel)
+const isServerless = Boolean(process.env.VERCEL);
 const dataDir = path.join(__dirname, 'data');
-const uploadsDir = path.join(__dirname, 'uploads');
+const uploadsDir = isServerless ? path.join(os.tmpdir(), 'portfolio-uploads') : path.join(__dirname, 'uploads');
 const certificatesDir = path.join(uploadsDir, 'certificates');
 
 [dataDir, uploadsDir, certificatesDir].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+  try {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  } catch (err) {
+    // Non-blocking in read-only serverless lambdas
   }
 });
 
@@ -237,6 +243,21 @@ const upload = multer({
       cb(null, true);
     } else {
       cb(new Error('Only PDF and image files are allowed.'));
+    }
+  }
+});
+
+// Memory storage multer for documents (avoids disk writes on serverless environments like Vercel)
+const uploadMemory = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const allowed = ['.pdf', '.txt', '.json', '.csv'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (allowed.includes(ext) || file.mimetype === 'application/pdf' || file.mimetype.startsWith('text/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Please upload a PDF or text document.'));
     }
   }
 });
@@ -673,18 +694,29 @@ app.post('/api/leetcode/sync', requireAdmin, async (_req: Request, res: Response
 });
 
 // POST /api/linkedin/parse (Protected LinkedIn Parser)
-app.post('/api/linkedin/parse', requireAdmin, upload.single('linkedinFile'), async (req: Request, res: Response) => {
+app.post('/api/linkedin/parse', requireAdmin, uploadMemory.single('linkedinFile'), async (req: Request, res: Response) => {
   try {
     let extractedText = '';
 
     if (req.file) {
       const ext = path.extname(req.file.originalname).toLowerCase();
+      const buffer = req.file.buffer || (req.file.path ? fs.readFileSync(req.file.path) : null);
+      if (!buffer) {
+        return res.status(400).json({ success: false, error: 'Could not access uploaded document buffer.' });
+      }
+
       if (ext === '.pdf') {
-        const fileBuffer = fs.readFileSync(req.file.path);
-        const pdfData = await pdfParse(fileBuffer);
-        extractedText = pdfData.text || '';
+        try {
+          const pdfData = await pdfParse(buffer);
+          extractedText = pdfData.text || '';
+        } catch (pdfErr: any) {
+          return res.status(400).json({
+            success: false,
+            error: 'Failed to extract text from PDF document: ' + pdfErr.message
+          });
+        }
       } else {
-        extractedText = fs.readFileSync(req.file.path, 'utf-8');
+        extractedText = buffer.toString('utf-8');
       }
     } else if (req.body.rawText) {
       extractedText = req.body.rawText;
@@ -817,6 +849,15 @@ if (fs.existsSync(distDir)) {
     res.sendFile(path.join(distDir, 'index.html'));
   });
 }
+
+// Global JSON error handler (ensures all unhandled errors/multer failures return JSON)
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('[SERVER_ERROR]', err);
+  res.status(err.status || err.statusCode || 500).json({
+    success: false,
+    error: err.message || 'An internal server error occurred.'
+  });
+});
 
 // Start listener only when not in test mode or Vercel serverless environment
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {

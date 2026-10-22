@@ -245,3 +245,36 @@ describe('5. Rate Limiting Protection', () => {
     expect(json.error).toContain('Too many failed login attempts');
   });
 });
+
+describe('6. LinkedIn Ingestion Document Parser', () => {
+  it('parses raw text and returns extracted profile data in JSON', async () => {
+    loginAttempts.clear();
+    const username = process.env.ADMIN_USERNAME || 'vaishnavi';
+    const password = process.env.ADMIN_PASSWORD || 'admin_secret_dev2026!';
+
+    const loginRes = await fetch(`${baseUrl}/api/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const sessionCookie = loginRes.headers.get('set-cookie')!.split(';')[0];
+
+    const parseRes = await fetch(`${baseUrl}/api/linkedin/parse`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: sessionCookie
+      },
+      body: JSON.stringify({
+        rawText: 'Vaishnavi Singh\nComputer Science Student\nAbout: Passionate developer working with Python, FastAPI, and React.'
+      })
+    });
+
+    expect(parseRes.status).toBe(200);
+    const parseJson = await parseRes.json();
+    expect(parseJson.success).toBe(true);
+    expect(parseJson.parsed.fullName).toBe('Vaishnavi Singh');
+    expect(parseJson.parsed.skills).toContain('Python');
+    expect(parseJson.parsed.skills).toContain('FastAPI');
+  });
+});
