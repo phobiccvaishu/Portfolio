@@ -18,8 +18,21 @@ import {
   Sliders,
   Check,
   Save,
-  RotateCcw
+  RotateCcw,
+  Mail,
+  Copy,
+  Send
 } from 'lucide-react';
+
+interface InquiryMessage {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  receivedAt: string;
+  status: string;
+}
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -37,7 +50,51 @@ export const AdminDashboard: React.FC = () => {
     resetToVerifiedInitial
   } = usePortfolio();
 
-  const [activeTab, setActiveTab] = useState<'sources' | 'linkedin' | 'credentials' | 'profile' | 'projects' | 'skills'>('sources');
+  const [activeTab, setActiveTab] = useState<'sources' | 'linkedin' | 'credentials' | 'profile' | 'projects' | 'skills' | 'inquiries'>('inquiries');
+
+  // Contact Inquiries State
+  const [inquiries, setInquiries] = useState<InquiryMessage[]>([]);
+  const [loadingInquiries, setLoadingInquiries] = useState(false);
+  const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
+
+  // Fetch inquiries from backend
+  const fetchInquiries = async () => {
+    try {
+      setLoadingInquiries(true);
+      const res = await fetch('/api/contact/messages');
+      const json = await res.json();
+      if (json.success && Array.isArray(json.messages)) {
+        setInquiries(json.messages);
+      }
+    } catch (e) {
+      console.error('Failed to fetch inquiries:', e);
+    } finally {
+      setLoadingInquiries(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchInquiries();
+  }, []);
+
+  const handleDeleteInquiry = async (id: string) => {
+    if (!confirm('Are you sure you want to remove this inquiry?')) return;
+    try {
+      const res = await fetch(`/api/contact/messages/${id}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        setInquiries(prev => prev.filter(m => m.id !== id));
+      }
+    } catch (e) {
+      alert('Failed to delete message');
+    }
+  };
+
+  const handleCopyEmail = (id: string, email: string) => {
+    navigator.clipboard.writeText(email);
+    setCopiedMsgId(id);
+    setTimeout(() => setCopiedMsgId(null), 2000);
+  };
 
   // GitHub Sync State
   const [syncingGithub, setSyncingGithub] = useState(false);
@@ -237,6 +294,7 @@ export const AdminDashboard: React.FC = () => {
       {/* Tabs */}
       <div className="flex flex-wrap gap-2 mb-8 border-b border-canvas-border pb-4">
         {[
+          { id: 'inquiries', label: `Inquiries Inbox (${inquiries.length})`, icon: <Mail className="w-4 h-4" />, highlight: inquiries.length > 0 },
           { id: 'sources', label: 'Sources & Sync', icon: <ShieldCheck className="w-4 h-4" /> },
           { id: 'linkedin', label: 'LinkedIn Importer', icon: <Linkedin className="w-4 h-4" /> },
           { id: 'credentials', label: 'Certificates & Documents', icon: <FileText className="w-4 h-4" /> },
@@ -246,10 +304,15 @@ export const AdminDashboard: React.FC = () => {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => {
+              setActiveTab(tab.id as any);
+              if (tab.id === 'inquiries') fetchInquiries();
+            }}
             className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-medium transition-all ${
               activeTab === tab.id
                 ? 'bg-accent text-black font-semibold'
+                : tab.highlight
+                ? 'bg-canvas-muted text-accent border border-accent-border font-semibold'
                 : 'bg-canvas-muted text-ink-secondary hover:text-ink border border-canvas-border'
             }`}
           >
@@ -258,6 +321,124 @@ export const AdminDashboard: React.FC = () => {
           </button>
         ))}
       </div>
+
+      {/* TAB 0: Inquiries Inbox */}
+      {activeTab === 'inquiries' && (
+        <div className="space-y-6">
+          <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-canvas-border pb-4">
+              <div>
+                <h2 className="font-display font-bold text-lg text-ink flex items-center gap-2">
+                  <span>Contact Inquiries Inbox</span>
+                  <span className="text-xs font-mono px-2 py-0.5 rounded bg-accent text-black font-semibold">
+                    {inquiries.length} Messages
+                  </span>
+                </h2>
+                <p className="text-xs text-ink-secondary mt-1">
+                  Questions and messages submitted through your website contact form. Persistently stored in <code className="text-accent font-mono">server/data/messages.json</code>.
+                </p>
+              </div>
+
+              <button
+                onClick={fetchInquiries}
+                disabled={loadingInquiries}
+                className="px-3 py-1.5 rounded-xl bg-canvas-muted hover:bg-canvas-surface text-ink text-xs font-mono border border-canvas-border flex items-center space-x-1.5 self-start transition-colors"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${loadingInquiries ? 'animate-spin' : ''}`} />
+                <span>Refresh Inbox</span>
+              </button>
+            </div>
+
+            {inquiries.length === 0 ? (
+              <div className="p-12 text-center space-y-3">
+                <Mail className="w-10 h-10 text-ink-muted mx-auto" />
+                <div className="font-display font-semibold text-ink">No inquiries received yet</div>
+                <p className="text-xs text-ink-secondary max-w-sm mx-auto">
+                  When visitors or recruiters submit messages via the contact form on your portfolio, they will appear here immediately.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {inquiries.map((msg) => {
+                  const replyMailto = `mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject)}&body=Hi ${encodeURIComponent(msg.name)},%0D%0A%0D%0AThank you for reaching out regarding "${encodeURIComponent(msg.subject)}".%0D%0A%0D%0ABest regards,%0D%0AVaishnavi%0D%0Ahttps://github.com/phobiccvaishu`;
+
+                  return (
+                    <div
+                      key={msg.id}
+                      className="p-5 rounded-xl bg-canvas-muted border border-canvas-border hover:border-canvas-borderStrong transition-all space-y-3 text-left"
+                    >
+                      {/* Header */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-canvas-border/50 pb-2.5">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 rounded-full bg-accent/15 border border-accent-border text-accent font-display font-bold text-xs flex items-center justify-center">
+                            {msg.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="font-display font-bold text-ink text-sm flex items-center gap-2">
+                              <span>{msg.name}</span>
+                              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-canvas-surface text-ink-muted border border-canvas-border">
+                                {new Date(msg.receivedAt).toLocaleDateString()} at {new Date(msg.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                            <div className="text-xs font-mono text-accent">
+                              {msg.email}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Subject */}
+                        <div className="text-xs font-mono text-ink-secondary bg-canvas-surface px-2.5 py-1 rounded border border-canvas-border self-start">
+                          Subject: <span className="text-ink font-medium">{msg.subject}</span>
+                        </div>
+                      </div>
+
+                      {/* Message Body */}
+                      <div className="p-3.5 rounded-lg bg-canvas-surface border border-canvas-border/60 text-xs sm:text-sm text-ink-secondary leading-relaxed font-sans whitespace-pre-wrap">
+                        {msg.message}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+                        <div className="flex items-center gap-2">
+                          {/* Reply Button */}
+                          <a
+                            href={replyMailto}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-accent text-black font-semibold hover:bg-accent-hover transition-colors shadow-sm"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Reply via Email ({msg.email})</span>
+                          </a>
+
+                          {/* Copy Email Button */}
+                          <button
+                            onClick={() => handleCopyEmail(msg.id, msg.email)}
+                            className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-canvas-surface hover:bg-canvas-subtle text-ink-secondary hover:text-ink border border-canvas-border transition-colors"
+                          >
+                            {copiedMsgId === msg.id ? <Check className="w-3.5 h-3.5 text-accent" /> : <Copy className="w-3.5 h-3.5" />}
+                            <span>{copiedMsgId === msg.id ? 'Copied Email' : 'Copy Email'}</span>
+                          </button>
+                        </div>
+
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDeleteInquiry(msg.id)}
+                          className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-950/30 transition-colors"
+                          title="Delete message"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* TAB 1: Sources & GitHub Sync */}
       {activeTab === 'sources' && (

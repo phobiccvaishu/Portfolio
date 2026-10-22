@@ -318,6 +318,35 @@ app.post('/api/contact', (req: Request, res: Response) => {
   }
 });
 
+// GET /api/contact/messages - Fetch all received inquiries
+app.get('/api/contact/messages', (_req: Request, res: Response) => {
+  try {
+    if (fs.existsSync(messagesFile)) {
+      const messages = JSON.parse(fs.readFileSync(messagesFile, 'utf-8'));
+      return res.json({ success: true, messages });
+    }
+    return res.json({ success: true, messages: [] });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// DELETE /api/contact/messages/:id - Delete an inquiry
+app.delete('/api/contact/messages/:id', (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    if (fs.existsSync(messagesFile)) {
+      let messages = JSON.parse(fs.readFileSync(messagesFile, 'utf-8'));
+      messages = messages.filter((m: any) => m.id !== id);
+      fs.writeFileSync(messagesFile, JSON.stringify(messages, null, 2), 'utf-8');
+      return res.json({ success: true, message: 'Message removed successfully' });
+    }
+    return res.status(404).json({ success: false, error: 'Messages file not found' });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Health check
 app.get('/api/health', (_req: Request, res: Response) => {
   res.json({
