@@ -118,13 +118,13 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
                 <>
                   <span>•</span>
                   <a
-                    href={data.profile.leetcodeUrl}
+                    href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="hover:text-accent flex items-center gap-1 text-accent font-semibold"
                   >
                     <Code2 className="w-3 h-3" />
-                    <span>LeetCode</span>
+                    <span>leetcode.com/u/{data.profile.leetcodeUsername || 'vaish_phob'}</span>
                   </a>
                 </>
               )}

@@ -105,6 +105,20 @@ export interface SocialLink {
   verified: boolean;
 }
 
+export interface LeetCodeStats {
+  username: string;
+  profileUrl: string;
+  ranking: number;
+  totalSolved: number;
+  easySolved: number;
+  mediumSolved: number;
+  hardSolved: number;
+  totalSubmissions: number;
+  languages: { name: string; solved: number }[];
+  recentSubmissions: { title: string; titleSlug: string; timestamp?: string }[];
+  lastSynced: string;
+}
+
 export interface PersonalProfile {
   name: string;
   preferredName?: string;
@@ -117,7 +131,9 @@ export interface PersonalProfile {
   avatarUrl: string;
   githubUsername: string;
   linkedinSlug: string;
+  leetcodeUsername?: string;
   leetcodeUrl?: string;
+  leetcodeStats?: LeetCodeStats;
   cgpa?: string;
   resumeUrl?: string;
   isOpenToOpportunities: boolean;
@@ -127,7 +143,7 @@ export interface PersonalProfile {
 }
 
 export interface DataSourceStatus {
-  source: 'GitHub API' | 'LinkedIn Public Check' | 'Manual Verified' | 'Verified e-Resume';
+  source: 'GitHub API' | 'LinkedIn Public Check' | 'Manual Verified' | 'Verified e-Resume' | 'LeetCode API';
   status: 'Connected' | 'Authentication Required / Authwall' | 'Cached';
   lastSync: string;
   notes: string;

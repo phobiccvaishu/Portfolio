@@ -158,6 +158,135 @@ app.post('/api/github/sync', async (_req: Request, res: Response) => {
   }
 });
 
+// POST /api/leetcode/sync - Synchronize live LeetCode stats for vaish_phob
+app.post('/api/leetcode/sync', async (_req: Request, res: Response) => {
+  const username = 'vaish_phob';
+  try {
+    const query = JSON.stringify({
+      query: `
+        query getUserProfile($username: String!) {
+          matchedUser(username: $username) {
+            username
+            profile {
+              ranking
+              userAvatar
+              realName
+            }
+            submitStats {
+              acSubmissionNum {
+                difficulty
+                count
+                submissions
+              }
+              totalSubmissionNum {
+                difficulty
+                count
+                submissions
+              }
+            }
+            languageProblemCount {
+              languageName
+              problemsSolved
+            }
+          }
+          recentAcSubmissionList(username: $username, limit: 10) {
+            id
+            title
+            titleSlug
+            timestamp
+          }
+        }
+      `,
+      variables: { username }
+    });
+
+    const response = await fetch('https://leetcode.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'Referer': 'https://leetcode.com/'
+      },
+      body: query
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        success: false,
+        error: `LeetCode GraphQL returned status ${response.status}`
+      });
+    }
+
+    const json = await response.json();
+    const user = json?.data?.matchedUser;
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'LeetCode user not found' });
+    }
+
+    const acNums = user.submitStats?.acSubmissionNum || [];
+    const totalAc = acNums.find((a: any) => a.difficulty === 'All')?.count || 0;
+    const easyAc = acNums.find((a: any) => a.difficulty === 'Easy')?.count || 0;
+    const mediumAc = acNums.find((a: any) => a.difficulty === 'Medium')?.count || 0;
+    const hardAc = acNums.find((a: any) => a.difficulty === 'Hard')?.count || 0;
+
+    const totalSub = user.submitStats?.totalSubmissionNum?.find((t: any) => t.difficulty === 'All')?.submissions || 0;
+
+    const stats = {
+      username: user.username,
+      profileUrl: `https://leetcode.com/u/${user.username}/`,
+      ranking: user.profile?.ranking || 0,
+      totalSolved: totalAc,
+      easySolved: easyAc,
+      mediumSolved: mediumAc,
+      hardSolved: hardAc,
+      totalSubmissions: totalSub,
+      languages: (user.languageProblemCount || []).map((l: any) => ({
+        name: l.languageName,
+        solved: l.problemsSolved
+      })),
+      recentSubmissions: (json?.data?.recentAcSubmissionList || []).map((s: any) => ({
+        title: s.title,
+        titleSlug: s.titleSlug,
+        timestamp: s.timestamp
+      })),
+      lastSynced: new Date().toISOString()
+    };
+
+    // Update in-memory / file cache if exists
+    const currentData = loadPortfolio();
+    if (currentData) {
+      currentData.profile.leetcodeUsername = 'vaish_phob';
+      currentData.profile.leetcodeUrl = `https://leetcode.com/u/vaish_phob/`;
+      currentData.profile.leetcodeStats = stats;
+      
+      // Update data source status
+      const existingIdx = currentData.dataSources.findIndex((d: any) => d.source === 'LeetCode API');
+      const leetSource = {
+        source: 'LeetCode API',
+        status: 'Connected',
+        lastSync: new Date().toISOString(),
+        notes: `Profile @vaish_phob verified. ${totalAc} problems solved (${easyAc} Easy, ${mediumAc} Medium).`
+      };
+      if (existingIdx >= 0) {
+        currentData.dataSources[existingIdx] = leetSource;
+      } else {
+        currentData.dataSources.push(leetSource);
+      }
+
+      currentData.lastUpdated = new Date().toISOString();
+      savePortfolio(currentData);
+    }
+
+    return res.json({
+      success: true,
+      message: 'LeetCode live statistics synchronized successfully!',
+      stats
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // POST /api/linkedin/parse - Parses uploaded LinkedIn PDF or pasted text
 app.post('/api/linkedin/parse', upload.single('linkedinFile'), async (req: Request, res: Response) => {
   try {

@@ -21,6 +21,7 @@ interface PortfolioContextType {
   updateEducation: (edu: Education[]) => void;
   updateExperience: (exp: Experience[]) => void;
   syncGitHub: () => Promise<{ success: boolean; message: string; report?: any }>;
+  syncLeetCode: () => Promise<{ success: boolean; message: string; stats?: any }>;
   importLinkedInData: (parsed: any) => { success: boolean; appliedCount: number };
   resetToVerifiedInitial: () => void;
 }
@@ -224,6 +225,50 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  const syncLeetCode = async () => {
+    try {
+      const res = await fetch('/api/leetcode/sync', { method: 'POST' });
+      const json = await res.json();
+      if (json.success && json.stats) {
+        const stats = json.stats;
+        let updatedSources = [...data.dataSources];
+        const existingIdx = updatedSources.findIndex(d => d.source === 'LeetCode API');
+        const leetSource = {
+          source: 'LeetCode API' as const,
+          status: 'Connected' as const,
+          lastSync: new Date().toISOString(),
+          notes: `Profile @${stats.username} verified. ${stats.totalSolved} problems solved (${stats.easySolved} Easy, ${stats.mediumSolved} Medium).`
+        };
+
+        if (existingIdx >= 0) {
+          updatedSources[existingIdx] = leetSource;
+        } else {
+          updatedSources.push(leetSource);
+        }
+
+        const updatedProfile: PersonalProfile = {
+          ...data.profile,
+          leetcodeUsername: stats.username,
+          leetcodeUrl: stats.profileUrl,
+          leetcodeStats: stats
+        };
+
+        const updatedData: PortfolioData = {
+          ...data,
+          profile: updatedProfile,
+          dataSources: updatedSources,
+          lastUpdated: new Date().toISOString()
+        };
+        persist(updatedData);
+
+        return { success: true, message: 'LeetCode statistics synchronized successfully!', stats };
+      }
+      return { success: false, message: json.error || 'Failed to sync with LeetCode API.' };
+    } catch (e: any) {
+      return { success: false, message: e.message || 'Network error reaching LeetCode endpoint.' };
+    }
+  };
+
   const importLinkedInData = (parsed: any) => {
     let appliedCount = 0;
     const newProfile = { ...data.profile };
@@ -308,6 +353,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateEducation,
         updateExperience,
         syncGitHub,
+        syncLeetCode,
         importLinkedInData,
         resetToVerifiedInitial
       }}

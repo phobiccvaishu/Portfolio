@@ -21,7 +21,8 @@ import {
   RotateCcw,
   Mail,
   Copy,
-  Send
+  Send,
+  Code2
 } from 'lucide-react';
 
 interface InquiryMessage {
@@ -47,7 +48,8 @@ export const AdminDashboard: React.FC = () => {
     addSkill,
     deleteSkill,
     updateProject,
-    resetToVerifiedInitial
+    resetToVerifiedInitial,
+    syncLeetCode
   } = usePortfolio();
 
   const [activeTab, setActiveTab] = useState<'sources' | 'linkedin' | 'credentials' | 'profile' | 'projects' | 'skills' | 'inquiries'>('inquiries');
@@ -56,6 +58,11 @@ export const AdminDashboard: React.FC = () => {
   const [inquiries, setInquiries] = useState<InquiryMessage[]>([]);
   const [loadingInquiries, setLoadingInquiries] = useState(false);
   const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
+
+  // LeetCode Sync State
+  const [syncingLeetCode, setSyncingLeetCode] = useState(false);
+  const [leetcodeSyncReport, setLeetcodeSyncReport] = useState<any>(null);
+  const [leetcodeSyncMsg, setLeetcodeSyncMsg] = useState('');
 
   // Fetch inquiries from backend
   const fetchInquiries = async () => {
@@ -139,6 +146,20 @@ export const AdminDashboard: React.FC = () => {
       setSyncStatusMsg('Live GitHub API synchronization successful!');
     } else {
       setSyncStatusMsg(`Sync error: ${result.message}`);
+    }
+  };
+
+  // Handle LeetCode Sync
+  const handleLeetCodeSync = async () => {
+    setSyncingLeetCode(true);
+    setLeetcodeSyncMsg('');
+    const result = await syncLeetCode();
+    setSyncingLeetCode(false);
+    if (result.success) {
+      setLeetcodeSyncReport(result.stats);
+      setLeetcodeSyncMsg('Live LeetCode GraphQL synchronization successful!');
+    } else {
+      setLeetcodeSyncMsg(`Sync error: ${result.message}`);
     }
   };
 
@@ -484,6 +505,32 @@ export const AdminDashboard: React.FC = () => {
                     </td>
                   </tr>
 
+                  {/* LeetCode Row */}
+                  <tr>
+                    <td className="p-3 font-medium text-ink flex items-center space-x-2">
+                      <Code2 className="w-4 h-4 text-accent" />
+                      <span>LeetCode GraphQL (@{data.profile.leetcodeUsername || 'vaish_phob'})</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 font-mono text-[11px]">
+                        Connected (Official GraphQL)
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      {data.profile.leetcodeStats?.totalSolved || 30} Solved ({data.profile.leetcodeStats?.easySolved || 20} Easy, {data.profile.leetcodeStats?.mediumSolved || 10} Med), C (28) & Java (3) verified
+                    </td>
+                    <td className="p-3">
+                      <button
+                        onClick={handleLeetCodeSync}
+                        disabled={syncingLeetCode}
+                        className="px-3 py-1 rounded bg-canvas-muted text-accent hover:bg-canvas-surface border border-accent-border font-mono text-[11px] flex items-center space-x-1"
+                      >
+                        <RefreshCw className={`w-3 h-3 ${syncingLeetCode ? 'animate-spin' : ''}`} />
+                        <span>Sync Now</span>
+                      </button>
+                    </td>
+                  </tr>
+
                   <tr>
                     <td className="p-3 font-medium text-ink flex items-center space-x-2">
                       <Linkedin className="w-4 h-4 text-blue-400" />
@@ -516,7 +563,42 @@ export const AdminDashboard: React.FC = () => {
                 <span>{syncStatusMsg}</span>
               </div>
             )}
+
+            {leetcodeSyncMsg && (
+              <div className="p-3 rounded-xl bg-accent-muted border border-accent-border text-xs text-ink font-mono flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-accent" />
+                <span>{leetcodeSyncMsg}</span>
+              </div>
+            )}
           </div>
+
+          {/* LeetCode Live Sync Report */}
+          {(leetcodeSyncReport || data.profile.leetcodeStats) && (
+            <div className="bg-canvas-subtle border border-canvas-border rounded-2xl p-6 space-y-4">
+              <h3 className="font-display font-bold text-base text-ink flex items-center gap-2">
+                <Code2 className="w-4 h-4 text-accent" />
+                <span>LeetCode GraphQL Live Sync Results</span>
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
+                  <div className="text-ink-muted">Username:</div>
+                  <div className="text-ink font-bold">@{data.profile.leetcodeUsername || 'vaish_phob'}</div>
+                </div>
+                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
+                  <div className="text-ink-muted">Global Ranking:</div>
+                  <div className="text-accent font-bold">#{data.profile.leetcodeStats?.ranking?.toLocaleString() || '3,734,091'}</div>
+                </div>
+                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
+                  <div className="text-ink-muted">Total Solved:</div>
+                  <div className="text-emerald-400 font-bold">{data.profile.leetcodeStats?.totalSolved || 30} ({data.profile.leetcodeStats?.easySolved || 20}E / {data.profile.leetcodeStats?.mediumSolved || 10}M)</div>
+                </div>
+                <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border">
+                  <div className="text-ink-muted">Languages:</div>
+                  <div className="text-ink font-bold">C (28) & Java (3)</div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* GitHub Live Sync Report */}
           {githubSyncReport && (

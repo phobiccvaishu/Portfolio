@@ -17,7 +17,35 @@ export const initialPortfolioData: PortfolioData = {
     avatarUrl: "https://avatars.githubusercontent.com/u/165480899?v=4",
     githubUsername: "phobiccvaishu",
     linkedinSlug: "vaishnavi-singh-076aba343",
-    leetcodeUrl: "https://leetcode.com/u/phobiccvaishu",
+    leetcodeUsername: "vaish_phob",
+    leetcodeUrl: "https://leetcode.com/u/vaish_phob/",
+    leetcodeStats: {
+      username: "vaish_phob",
+      profileUrl: "https://leetcode.com/u/vaish_phob/",
+      ranking: 3734091,
+      totalSolved: 30,
+      easySolved: 20,
+      mediumSolved: 10,
+      hardSolved: 0,
+      totalSubmissions: 42,
+      languages: [
+        { name: "C", solved: 28 },
+        { name: "Java", solved: 3 }
+      ],
+      recentSubmissions: [
+        { title: "Sqrt(x)", titleSlug: "sqrtx" },
+        { title: "Add Binary", titleSlug: "add-binary" },
+        { title: "Plus One", titleSlug: "plus-one" },
+        { title: "Unique Paths", titleSlug: "unique-paths" },
+        { title: "Rotate List", titleSlug: "rotate-list" },
+        { title: "Search Insert Position", titleSlug: "search-insert-position" },
+        { title: "Divide Two Integers", titleSlug: "divide-two-integers" },
+        { title: "Find the Index of the First Occurrence in a String", titleSlug: "find-the-index-of-the-first-occurrence-in-a-string" },
+        { title: "Remove Element", titleSlug: "remove-element" },
+        { title: "Remove Duplicates from Sorted Array", titleSlug: "remove-duplicates-from-sorted-array" }
+      ],
+      lastSynced: new Date().toISOString()
+    },
     cgpa: "8.60 / 10.00",
     isOpenToOpportunities: true,
     targetRoles: [
@@ -288,7 +316,7 @@ export const initialPortfolioData: PortfolioData = {
   socialLinks: [
     { platform: 'github', url: 'https://github.com/phobiccvaishu', label: 'github.com/phobiccvaishu', verified: true },
     { platform: 'linkedin', url: 'https://www.linkedin.com/in/vaishnavi-singh-076aba343', label: 'linkedin.com/in/vaishnavi-singh-076aba343', verified: true },
-    { platform: 'leetcode', url: 'https://leetcode.com/u/phobiccvaishu', label: 'LeetCode', verified: true },
+    { platform: 'leetcode', url: 'https://leetcode.com/u/vaish_phob/', label: 'leetcode.com/u/vaish_phob', verified: true },
     { platform: 'email', url: 'mailto:Vaishnavi1657@gmail.com', label: 'Vaishnavi1657@gmail.com', verified: true },
     { platform: 'phone', url: 'tel:+917209905770', label: '+91-7209905770', verified: true }
   ],
@@ -298,6 +326,12 @@ export const initialPortfolioData: PortfolioData = {
       status: 'Connected',
       lastSync: new Date().toISOString(),
       notes: 'Directly synced with official resume: 8.60 CGPA, C-DAC MEPZ 400hr specialization, Unified Mentor internship, Reqruit IQ research paper.'
+    },
+    {
+      source: 'LeetCode API',
+      status: 'Connected',
+      lastSync: new Date().toISOString(),
+      notes: 'Profile @vaish_phob connected via GraphQL API. 30 problems solved (20 Easy, 10 Medium), C & Java languages verified.'
     },
     {
       source: 'GitHub API',

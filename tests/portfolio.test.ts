@@ -43,6 +43,15 @@ describe('Portfolio Verified e-Resume & Project Integrity', () => {
     expect(edu.verified).toBe(true);
   });
 
+  it('contains verified LeetCode profile and problem solve stats', () => {
+    expect(initialPortfolioData.profile.leetcodeUsername).toBe('vaish_phob');
+    expect(initialPortfolioData.profile.leetcodeUrl).toBe('https://leetcode.com/u/vaish_phob/');
+    expect(initialPortfolioData.profile.leetcodeStats).toBeDefined();
+    expect(initialPortfolioData.profile.leetcodeStats?.totalSolved).toBe(30);
+    expect(initialPortfolioData.profile.leetcodeStats?.easySolved).toBe(20);
+    expect(initialPortfolioData.profile.leetcodeStats?.mediumSolved).toBe(10);
+  });
+
   it('validates contact form schema with Zod', () => {
     const contactSchema = z.object({
       name: z.string().min(2),

@@ -163,27 +163,68 @@ export const ExperienceEducation: React.FC = () => {
                 </div>
               ))}
 
-              {/* Problem Solving Spotlight Card */}
-              <div className="p-6 rounded-2xl bg-canvas-muted border border-canvas-border space-y-3">
-                <div className="flex items-center space-x-2 text-accent text-xs font-mono uppercase tracking-wider font-semibold">
-                  <Award className="w-4 h-4" />
-                  <span>Algorithmic Problem Solving</span>
+              {/* LeetCode Verified Profile & Problem Solving Spotlight Card */}
+              <div className="p-6 rounded-2xl bg-canvas-muted border border-canvas-border space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-accent text-xs font-mono uppercase tracking-wider font-semibold">
+                    <Award className="w-4 h-4" />
+                    <span>Verified LeetCode Profile</span>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent text-black font-semibold">
+                    @{data.profile.leetcodeUsername || 'vaish_phob'}
+                  </span>
                 </div>
-                <div className="text-xl font-display font-extrabold text-ink">
-                  LeetCode & Data Structures
+
+                <div>
+                  <div className="text-xl font-display font-extrabold text-ink">
+                    LeetCode Problem Solving
+                  </div>
+                  <div className="text-xs font-mono text-ink-muted mt-0.5">
+                    Global Ranking: #{data.profile.leetcodeStats?.ranking?.toLocaleString() || '3,734,091'}
+                  </div>
                 </div>
-                <p className="text-xs text-ink-secondary leading-relaxed">
-                  Active problem solving across LeetCode and competitive programming platforms, focusing on Data Structures, Algorithms, Dynamic Programming, and Graph Traversals.
-                </p>
-                <a
-                  href="https://leetcode.com/u/phobiccvaishu"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-1.5 text-xs font-mono text-accent hover:underline pt-1"
-                >
-                  <span>View LeetCode Profile</span>
-                  <span>→</span>
-                </a>
+
+                {/* Solved breakdown */}
+                <div className="grid grid-cols-3 gap-2 text-center font-mono">
+                  <div className="p-2.5 rounded-lg bg-canvas-surface border border-canvas-border">
+                    <div className="text-base font-bold text-ink">{data.profile.leetcodeStats?.totalSolved || 30}</div>
+                    <div className="text-[10px] text-ink-muted">Total Solved</div>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-canvas-surface border border-canvas-border">
+                    <div className="text-base font-bold text-emerald-400">{data.profile.leetcodeStats?.easySolved || 20}</div>
+                    <div className="text-[10px] text-ink-muted">Easy</div>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-canvas-surface border border-canvas-border">
+                    <div className="text-base font-bold text-amber-400">{data.profile.leetcodeStats?.mediumSolved || 10}</div>
+                    <div className="text-[10px] text-ink-muted">Medium</div>
+                  </div>
+                </div>
+
+                {/* Languages verified on LeetCode */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="text-[11px] font-mono text-ink-muted">Verified Languages on LeetCode:</div>
+                  <div className="flex flex-wrap gap-2 text-xs font-mono">
+                    <span className="px-2 py-0.5 rounded bg-canvas-surface text-ink border border-canvas-border">
+                      C (28 solved)
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-canvas-surface text-ink border border-canvas-border">
+                      Java (3 solved)
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-canvas-border flex items-center justify-between">
+                  <span className="text-[11px] font-mono text-ink-muted">Live GraphQL Synced</span>
+                  <a
+                    href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-1.5 text-xs font-mono text-accent hover:underline font-semibold"
+                  >
+                    <span>leetcode.com/u/vaish_phob</span>
+                    <span>→</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

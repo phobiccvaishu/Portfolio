@@ -15,7 +15,81 @@
     "avatarUrl": "https://avatars.githubusercontent.com/u/165480899?v=4",
     "githubUsername": "phobiccvaishu",
     "linkedinSlug": "vaishnavi-singh-076aba343",
-    "leetcodeUrl": "https://leetcode.com/u/phobiccvaishu",
+    "leetcodeUsername": "vaish_phob",
+    "leetcodeUrl": "https://leetcode.com/u/vaish_phob/",
+    "leetcodeStats": {
+      "username": "vaish_phob",
+      "profileUrl": "https://leetcode.com/u/vaish_phob/",
+      "ranking": 3734091,
+      "totalSolved": 30,
+      "easySolved": 20,
+      "mediumSolved": 10,
+      "hardSolved": 0,
+      "totalSubmissions": 42,
+      "languages": [
+        {
+          "name": "Java",
+          "solved": 3
+        },
+        {
+          "name": "C",
+          "solved": 28
+        }
+      ],
+      "recentSubmissions": [
+        {
+          "title": "Sqrt(x)",
+          "titleSlug": "sqrtx",
+          "timestamp": "1776262102"
+        },
+        {
+          "title": "Add Binary",
+          "titleSlug": "add-binary",
+          "timestamp": "1776262054"
+        },
+        {
+          "title": "Plus One",
+          "titleSlug": "plus-one",
+          "timestamp": "1776261999"
+        },
+        {
+          "title": "Unique Paths",
+          "titleSlug": "unique-paths",
+          "timestamp": "1776261821"
+        },
+        {
+          "title": "Rotate List",
+          "titleSlug": "rotate-list",
+          "timestamp": "1776261776"
+        },
+        {
+          "title": "Search Insert Position",
+          "titleSlug": "search-insert-position",
+          "timestamp": "1776261705"
+        },
+        {
+          "title": "Divide Two Integers",
+          "titleSlug": "divide-two-integers",
+          "timestamp": "1776261658"
+        },
+        {
+          "title": "Find the Index of the First Occurrence in a String",
+          "titleSlug": "find-the-index-of-the-first-occurrence-in-a-string",
+          "timestamp": "1776261468"
+        },
+        {
+          "title": "Remove Element",
+          "titleSlug": "remove-element",
+          "timestamp": "1776261428"
+        },
+        {
+          "title": "Remove Duplicates from Sorted Array",
+          "titleSlug": "remove-duplicates-from-sorted-array",
+          "timestamp": "1776261366"
+        }
+      ],
+      "lastSynced": "2026-10-22T20:17:11.622Z"
+    },
     "cgpa": "8.60 / 10.00",
     "isOpenToOpportunities": true,
     "targetRoles": [
@@ -555,8 +629,8 @@
     },
     {
       "platform": "leetcode",
-      "url": "https://leetcode.com/u/phobiccvaishu",
-      "label": "LeetCode",
+      "url": "https://leetcode.com/u/vaish_phob/",
+      "label": "leetcode.com/u/vaish_phob",
       "verified": true
     },
     {
@@ -576,27 +650,33 @@
     {
       "source": "Verified e-Resume",
       "status": "Connected",
-      "lastSync": "2026-10-22T18:12:04.103Z",
+      "lastSync": "2026-10-22T18:28:16.843Z",
       "notes": "Directly synced with official resume: 8.60 CGPA, C-DAC MEPZ 400hr specialization, Unified Mentor internship, Reqruit IQ research paper."
+    },
+    {
+      "source": "LeetCode API",
+      "status": "Connected",
+      "lastSync": "2026-10-22T20:17:11.623Z",
+      "notes": "Profile @vaish_phob verified. 30 problems solved (20 Easy, 10 Medium)."
     },
     {
       "source": "GitHub API",
       "status": "Connected",
-      "lastSync": "2026-10-22T18:12:04.104Z",
+      "lastSync": "2026-10-22T18:28:16.843Z",
       "notes": "Profile, 6 public repositories, and tech stack verified via GitHub REST API."
     },
     {
       "source": "LinkedIn Public Check",
       "status": "Authentication Required / Authwall",
-      "lastSync": "2026-10-22T18:12:04.104Z",
+      "lastSync": "2026-10-22T18:28:16.843Z",
       "notes": "LinkedIn requires authenticated session (HTTP 999 response). Import interface active for PDF/CSV upload."
     },
     {
       "source": "Manual Verified",
       "status": "Connected",
-      "lastSync": "2026-10-22T18:12:04.104Z",
+      "lastSync": "2026-10-22T18:28:16.843Z",
       "notes": "Profile details, phone, and coursework verified without fabrication."
     }
   ],
-  "lastUpdated": "2026-10-22T18:12:04.104Z"
+  "lastUpdated": "2026-10-22T20:17:11.623Z"
 }

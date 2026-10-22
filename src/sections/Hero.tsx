@@ -122,13 +122,13 @@ export const Hero: React.FC = () => {
               </a>
               <span className="text-canvas-border hidden sm:inline">|</span>
               <a
-                href={data.profile.leetcodeUrl || "https://leetcode.com/u/phobiccvaishu"}
+                href={data.profile.leetcodeUrl || "https://leetcode.com/u/vaish_phob/"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-1.5 text-accent hover:underline font-semibold"
               >
                 <Code2 className="w-4 h-4" />
-                <span>LeetCode</span>
+                <span>LeetCode (@{data.profile.leetcodeUsername || 'vaish_phob'})</span>
               </a>
               {data.profile.phone && (
                 <>
