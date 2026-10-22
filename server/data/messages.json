@@ -1,20 +1,11 @@
 [
   {
-    "id": "msg-1792707956912",
-    "name": "Technical Recruiter",
-    "email": "recruiter@enterprise.ai",
-    "subject": "Engineering Opportunity",
-    "message": "Hello Vaishnavi, we reviewed your projects and would like to connect.",
-    "receivedAt": "2026-10-22T22:25:56.912Z",
-    "status": "received"
-  },
-  {
-    "id": "msg-1792707879548",
-    "name": "Technical Recruiter",
-    "email": "recruiter@enterprise.ai",
-    "subject": "Engineering Opportunity",
-    "message": "Hello Vaishnavi, we reviewed your projects and would like to connect.",
-    "receivedAt": "2026-10-22T22:24:39.548Z",
+    "id": "msg-1792702655975",
+    "name": "Anirudh Saini",
+    "email": "sainianirudh03march@gmail.com",
+    "subject": "I love you",
+    "message": "hulululu",
+    "receivedAt": "2026-10-22T20:57:35.975Z",
     "status": "received"
   }
 ]
