@@ -167,10 +167,10 @@ export const ExperienceEducation: React.FC = () => {
               <div className="p-6 rounded-2xl bg-canvas-muted border border-canvas-border space-y-3">
                 <div className="flex items-center space-x-2 text-accent text-xs font-mono uppercase tracking-wider font-semibold">
                   <Award className="w-4 h-4" />
-                  <span>Competitive Problem Solving Track</span>
+                  <span>Algorithmic Problem Solving</span>
                 </div>
-                <div className="text-2xl font-display font-extrabold text-ink">
-                  300+ Problems Solved
+                <div className="text-xl font-display font-extrabold text-ink">
+                  LeetCode & Data Structures
                 </div>
                 <p className="text-xs text-ink-secondary leading-relaxed">
                   Active problem solving across LeetCode and competitive programming platforms, focusing on Data Structures, Algorithms, Dynamic Programming, and Graph Traversals.

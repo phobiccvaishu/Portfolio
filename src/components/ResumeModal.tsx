@@ -124,7 +124,7 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
                     className="hover:text-accent flex items-center gap-1 text-accent font-semibold"
                   >
                     <Code2 className="w-3 h-3" />
-                    <span>LeetCode (300+ Solved)</span>
+                    <span>LeetCode</span>
                   </a>
                 </>
               )}
@@ -321,7 +321,7 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
                 <strong className="text-ink">Certifications:</strong> C-DAC AI/ML (400-Hour Advanced Specialization — <span className="text-accent font-semibold">Ongoing</span>), NPTEL Programming in Java, SRMIST Advanced Java & DSA in C.
               </div>
               <div>
-                <strong className="text-ink">Problem Solving:</strong> Solved <strong>300+ algorithmic problems</strong> across platforms including LeetCode, focusing on Data Structures, Algorithms, and Dynamic Programming.
+                <strong className="text-ink">Problem Solving:</strong> Active algorithmic problem solving across platforms including LeetCode, focusing on Data Structures, Algorithms, and Dynamic Programming.
               </div>
               <div>
                 <strong className="text-ink">Languages:</strong> English (Professional), Hindi (Native).

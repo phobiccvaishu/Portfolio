@@ -70,9 +70,6 @@ export const Hero: React.FC = () => {
               <span className="text-xs px-2.5 py-1 rounded-md bg-canvas-muted text-ink-secondary border border-canvas-border font-mono">
                 Reqruit IQ Research Paper (Ongoing)
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-canvas-muted text-ink-secondary border border-canvas-border font-mono">
-                300+ LeetCode Solved
-              </span>
             </div>
 
             {/* Actions / CTA Buttons */}
@@ -131,7 +128,7 @@ export const Hero: React.FC = () => {
                 className="flex items-center space-x-1.5 text-accent hover:underline font-semibold"
               >
                 <Code2 className="w-4 h-4" />
-                <span>LeetCode (300+ Solved)</span>
+                <span>LeetCode</span>
               </a>
               {data.profile.phone && (
                 <>
@@ -192,8 +189,8 @@ export const Hero: React.FC = () => {
                   <div className="text-[11px] font-mono text-ink-muted mt-0.5">SRMIST CGPA</div>
                 </div>
                 <div className="p-3 bg-canvas-muted rounded-xl border border-canvas-border text-left">
-                  <div className="text-xl font-display font-bold text-accent">300+</div>
-                  <div className="text-[11px] font-mono text-ink-muted mt-0.5">Problems Solved</div>
+                  <div className="text-xl font-display font-bold text-accent">Active</div>
+                  <div className="text-[11px] font-mono text-ink-muted mt-0.5">LeetCode DSA</div>
                 </div>
               </div>
 

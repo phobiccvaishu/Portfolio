@@ -24,7 +24,6 @@
       "Backend & Systems Developer",
       "Full-Stack Developer"
     ],
-    "problemSolvingCount": "300+ Problems Solved (LeetCode & Competitive Platforms)",
     "spokenLanguages": [
       "English (Professional)",
       "Hindi (Native)"
@@ -426,7 +425,7 @@
       "highlights": [
         "Current CGPA: 8.60 / 10.00 in Computer Science and Engineering",
         "Relevant Coursework: Data Structures & Algorithms, Object-Oriented Programming, DBMS, Operating Systems, Computer Networks, System Design, RESTful API Engineering",
-        "Competitive Problem Solving: 300+ algorithmic problems solved across platforms including LeetCode focusing on DSA and Dynamic Programming"
+        "Active problem solving across competitive platforms including LeetCode focusing on DSA and Dynamic Programming"
       ],
       "verified": true
     }
@@ -539,17 +538,6 @@
       "status": "completed",
       "isPublic": true,
       "verified": true
-    },
-    {
-      "id": "cred-leetcode-300",
-      "title": "Competitive Problem Solving (300+ Problems Solved)",
-      "issuer": "LeetCode & Algorithmic Platforms",
-      "type": "award",
-      "issueDate": "Active",
-      "status": "ongoing",
-      "verificationUrl": "https://leetcode.com/u/phobiccvaishu",
-      "isPublic": true,
-      "verified": true
     }
   ],
   "socialLinks": [
@@ -568,7 +556,7 @@
     {
       "platform": "leetcode",
       "url": "https://leetcode.com/u/phobiccvaishu",
-      "label": "LeetCode (300+ Solved)",
+      "label": "LeetCode",
       "verified": true
     },
     {
@@ -588,27 +576,27 @@
     {
       "source": "Verified e-Resume",
       "status": "Connected",
-      "lastSync": "2026-10-22T17:56:17.422Z",
+      "lastSync": "2026-10-22T18:12:04.103Z",
       "notes": "Directly synced with official resume: 8.60 CGPA, C-DAC MEPZ 400hr specialization, Unified Mentor internship, Reqruit IQ research paper."
     },
     {
       "source": "GitHub API",
       "status": "Connected",
-      "lastSync": "2026-10-22T17:56:17.423Z",
+      "lastSync": "2026-10-22T18:12:04.104Z",
       "notes": "Profile, 6 public repositories, and tech stack verified via GitHub REST API."
     },
     {
       "source": "LinkedIn Public Check",
       "status": "Authentication Required / Authwall",
-      "lastSync": "2026-10-22T17:56:17.423Z",
+      "lastSync": "2026-10-22T18:12:04.104Z",
       "notes": "LinkedIn requires authenticated session (HTTP 999 response). Import interface active for PDF/CSV upload."
     },
     {
       "source": "Manual Verified",
       "status": "Connected",
-      "lastSync": "2026-10-22T17:56:17.423Z",
-      "notes": "Profile details, phone, coursework, and 300+ LeetCode problems verified without fabrication."
+      "lastSync": "2026-10-22T18:12:04.104Z",
+      "notes": "Profile details, phone, and coursework verified without fabrication."
     }
   ],
-  "lastUpdated": "2026-10-22T17:56:17.423Z"
+  "lastUpdated": "2026-10-22T18:12:04.104Z"
 }

@@ -26,7 +26,6 @@ export const initialPortfolioData: PortfolioData = {
       "Backend & Systems Developer",
       "Full-Stack Developer"
     ],
-    problemSolvingCount: "300+ Problems Solved (LeetCode & Competitive Platforms)",
     spokenLanguages: ["English (Professional)", "Hindi (Native)"]
   },
   skills: [
@@ -188,7 +187,7 @@ export const initialPortfolioData: PortfolioData = {
       highlights: [
         'Current CGPA: 8.60 / 10.00 in Computer Science and Engineering',
         'Relevant Coursework: Data Structures & Algorithms, Object-Oriented Programming, DBMS, Operating Systems, Computer Networks, System Design, RESTful API Engineering',
-        'Competitive Problem Solving: 300+ algorithmic problems solved across platforms including LeetCode focusing on DSA and Dynamic Programming'
+        'Active problem solving across competitive platforms including LeetCode focusing on DSA and Dynamic Programming'
       ],
       verified: true
     }
@@ -284,23 +283,12 @@ export const initialPortfolioData: PortfolioData = {
       status: 'completed',
       isPublic: true,
       verified: true
-    },
-    {
-      id: 'cred-leetcode-300',
-      title: 'Competitive Problem Solving (300+ Problems Solved)',
-      issuer: 'LeetCode & Algorithmic Platforms',
-      type: 'award',
-      issueDate: 'Active',
-      status: 'ongoing',
-      verificationUrl: 'https://leetcode.com/u/phobiccvaishu',
-      isPublic: true,
-      verified: true
     }
   ],
   socialLinks: [
     { platform: 'github', url: 'https://github.com/phobiccvaishu', label: 'github.com/phobiccvaishu', verified: true },
     { platform: 'linkedin', url: 'https://www.linkedin.com/in/vaishnavi-singh-076aba343', label: 'linkedin.com/in/vaishnavi-singh-076aba343', verified: true },
-    { platform: 'leetcode', url: 'https://leetcode.com/u/phobiccvaishu', label: 'LeetCode (300+ Solved)', verified: true },
+    { platform: 'leetcode', url: 'https://leetcode.com/u/phobiccvaishu', label: 'LeetCode', verified: true },
     { platform: 'email', url: 'mailto:Vaishnavi1657@gmail.com', label: 'Vaishnavi1657@gmail.com', verified: true },
     { platform: 'phone', url: 'tel:+917209905770', label: '+91-7209905770', verified: true }
   ],
@@ -327,7 +315,7 @@ export const initialPortfolioData: PortfolioData = {
       source: 'Manual Verified',
       status: 'Connected',
       lastSync: new Date().toISOString(),
-      notes: 'Profile details, phone, coursework, and 300+ LeetCode problems verified without fabrication.'
+      notes: 'Profile details, phone, and coursework verified without fabrication.'
     }
   ],
   lastUpdated: new Date().toISOString()
